@@ -1,0 +1,10 @@
+# Dirs
+Intermediate/
+Bin/
+.vs/
+
+# Files
+*.user
+
+
+
