@@ -1,3 +1,6 @@
 [submodule "Envii/thirdparty/spdlog"]
 	path = Envii/thirdparty/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Envii/thirdparty/glfw"]
+	path = Envii/thirdparty/glfw
+	url = https://github.com/dstacer/glfw

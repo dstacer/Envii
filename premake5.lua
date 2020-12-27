@@ -3,19 +3,41 @@ workspace "Envii"
    architecture "x86_64" 
    configurations { "Debug", "Release", "Dist" }
 
+-- Output directory for binaries and intermediates
 outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
+
+-- Table of include directories for external dependencies
+extIncludeDirs = {}
+extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
+
+-- This includes the premake5.lua file in the glfw project
+include "Envii/thirdparty/glfw"
+
 project "Envii"
    location "Envii"
    kind "StaticLib"
    language "C++"
-   targetdir ("bin/" .. outputdir .. "%{prj.name}")
+   bindir = "bin/" .. outputdir .. "/"
+   targetdir (bindir .. "%{prj.name}")
    objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
+
+   pchheader "evpch.h"
+   pchsource "%{prj.name}/src/evpch.cpp"
 
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-   includedirs { "%{prj.location}/src",
-                 "%{wks.location}/Envii/thirdparty/spdlog/include" }
+   includedirs 
+   { 
+        "%{prj.location}/src",
+        "%{wks.location}/Envii/thirdparty/spdlog/include",
+        "%{extIncludeDirs.glfw}"
+   }
 
+   links 
+   {
+        "Envii/thirdparty/glfw/" .. bindir .. "glfw.lib",
+        "opengl32.lib"
+   }
 
    filter "system:windows"
       cppdialect "C++17"
@@ -23,7 +45,8 @@ project "Envii"
       systemversion "latest"
       defines "EV_PLATFORM_WINDOWS"
 
-      postbuildcommands {
+      postbuildcommands 
+      {
          ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "Sandbox")
       }
    
@@ -49,7 +72,8 @@ project "Sandbox"
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
    includedirs { "%{wks.location}/Envii/src/Client",
-                 "%{wks.location}/Envii/thirdparty/spdlog/include" }
+                 "%{wks.location}/Envii/thirdparty/spdlog/include" 
+               }
    
    links "Envii" 
    
