@@ -108,6 +108,15 @@ namespace Envii
 			}
 		});
 
+		// Set the GLFW event callbacks for keyboard events
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, uint32_t keyCode)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(keyCode);
+			data.Callback(event);
+		});
+
 		// Set the GLFW event callbacks for mouse events
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{

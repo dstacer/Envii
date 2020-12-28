@@ -33,6 +33,9 @@ namespace Envii
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
+		// Get the native window, regardless of underlying implementation
+		virtual void* GetNativeWindow() const = 0;
+
 		// Basic platform-independent Window abstraction, subclassed
 		// per platform
 		static Window* Create(const WindowProps& props = WindowProps());

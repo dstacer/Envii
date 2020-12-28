@@ -11,7 +11,7 @@ namespace Envii
 			: m_MouseX(x), m_MouseY(y) {}
 
 		EVENT_TYPE_IFACE(MouseMove)
-		EVENT_CATEGORY_IFACE(Mouse | Input)
+		EVENT_CATEGORY_IFACE(Mouse | Inputs)
 		float GetMouseX() const { return m_MouseX; }
 		float GetMouseY() const { return m_MouseY; }
 
@@ -34,7 +34,7 @@ namespace Envii
 			: m_AmountX(amountX), m_AmountY(amountY) {}
 		
 		EVENT_TYPE_IFACE(MouseScroll)
-		EVENT_CATEGORY_IFACE(Mouse | Input)
+		EVENT_CATEGORY_IFACE(Mouse | Inputs)
 		float GetAmountX() { return m_AmountX; }
 		float GetAmountY() { return m_AmountY; }
 
@@ -53,7 +53,7 @@ namespace Envii
 	class MouseButtonEvent : public Event
 	{
 	public:
-		EVENT_CATEGORY_IFACE(Input | Mouse | MouseButton)
+		EVENT_CATEGORY_IFACE(Inputs | Mouse | MouseButton)
 		int GetButton() const { return m_Button; }
 	
 	protected:

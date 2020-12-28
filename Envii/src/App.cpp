@@ -3,17 +3,19 @@
 #include "glad/glad.h"
 #include "Log.h"
 #include "App.h"
+#include "Core.h"
+#include "Input.h"
 
 namespace Envii
 {
-	#define BIND_EVENT_CB(x) std::bind(&x, this, std::placeholders::_1)
+	//#define BIND_EVENT_CB(x) std::bind(&x, this, std::placeholders::_1)
 	App* App::s_Instance = nullptr;
 	App::App()
 	{
 		EV_CORE_ASSERT(!s_Instance, "App already exists.");
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(BIND_EVENT_CB(App::OnEvent));
+		m_Window->SetEventCallback(EV_BIND_EVENT_CB(App::OnEvent));
 	}
 
 	App::~App()
@@ -31,6 +33,9 @@ namespace Envii
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
+			auto [x, y] = Input::GetMousePos();
+			EV_CORE_TRACE("({0}, {1})", x, y);
+
 			// Update our main window
 			m_Window->OnUpdate();
 		}
@@ -39,7 +44,7 @@ namespace Envii
 	void App::OnEvent(Event& event)
 	{
 		EventDispatcher d(event);
-		d.Dispatch<WindowCloseEvent>(BIND_EVENT_CB(App::OnWindowClose));
+		d.Dispatch<WindowCloseEvent>(EV_BIND_EVENT_CB(App::OnWindowClose));
 		
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{

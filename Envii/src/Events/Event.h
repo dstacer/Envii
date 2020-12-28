@@ -13,7 +13,7 @@ namespace Envii
 		None = 0,
 		WindowResize, WindowMove, WindowClose, WindowFocus, WindowDefocus,
 		AppTick, AppUpdate, AppRender,
-		KeyPress, KeyRelease,
+		KeyPress, KeyRelease, KeyTyped,
 		MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll
 	};
 
@@ -21,7 +21,7 @@ namespace Envii
 	{
 		None			= 0,
 		Application		= BIT(1),
-		Input			= BIT(2),
+		Inputs			= BIT(2),
 		Keyboard		= BIT(3),
 		Mouse			= BIT(4),
 		MouseButton		= BIT(5)

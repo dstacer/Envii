@@ -9,7 +9,7 @@ namespace Envii
 	public:
 		int GetKeyCode() { return m_KeyCode; }
 		
-		EVENT_CATEGORY_IFACE(Keyboard | Input);
+		EVENT_CATEGORY_IFACE(Keyboard | Inputs);
 	protected:
 		KeyEvent(int keycode)
 			: m_KeyCode(keycode) {}
@@ -51,5 +51,21 @@ namespace Envii
 		}
 
 		EVENT_TYPE_IFACE(KeyRelease)
+	};
+
+	class KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_KeyCode;
+			return ss.str();
+		}
+
+		EVENT_TYPE_IFACE(KeyTyped)
 	};
 }

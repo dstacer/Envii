@@ -2,6 +2,7 @@
 workspace "Envii"
    architecture "x86_64" 
    configurations { "Debug", "Release", "Dist" }
+   startproject "Sandbox"
 
 -- Output directory for binaries and intermediates
 outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
@@ -11,6 +12,12 @@ extIncludeDirs = {}
 extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glad"] = "%{wks.name}/thirdparty/glad/include"
 extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
+
+group "Dependencies"
+	include "Envii/thirdparty/glfw"
+	include "Envii/thirdparty/glad"
+	include "Envii/thirdparty/imgui"
+group ""
 
 -- This includes the premake5.lua files in the subproject dirs
 include "Envii/thirdparty/glfw"
@@ -61,14 +68,17 @@ project "Envii"
    
    filter "configurations:Debug"
       defines { "EV_DEBUG", "_DEBUG", "_CONSOLE" }
+      runtime "Debug"
       symbols "On"
 
    filter "configurations:Release"
       defines { "EV_RELEASE", "NDEBUG", "_CONSOLE" }
+      runtime "Release"
       optimize "On"
 
    filter "configurations:Dist"
       defines { "EV_DIST", "NDEBUG", "_CONSOLE" }
+      runtime "Release"
       optimize "On"
 
 project "Sandbox"
@@ -94,12 +104,15 @@ project "Sandbox"
 
    filter "configurations:Debug"
       defines { "EV_DEBUG", "_DEBUG", "_CONSOLE" }
+      runtime "Debug"
       symbols "On"
 
    filter "configurations:Release"
       defines { "EV_RELEASE", "NDEBUG", "_CONSOLE" }
+      runtime "Release"
       optimize "On"
 
    filter "configurations:Dist"
       defines { "EV_DIST", "NDEBUG", "_CONSOLE" }
+      runtime "Release"
       optimize "On"

@@ -5,7 +5,6 @@
 #include "App.h"
 #include "ImguiLayer.h"
 
-
 namespace Envii
 {
 	ImguiLayer::ImguiLayer()
@@ -49,7 +48,7 @@ namespace Envii
 
 		ImGui::StyleColorsDark();
 		// Setup Platform/Renderer backends
-		ImGui_ImplOpenGL3_Init("#version 130");
+		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 	void ImguiLayer::OnDetach()
 	{
@@ -74,5 +73,87 @@ namespace Envii
 	}
 	void ImguiLayer::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<MouseButtonPressEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnMouseButtonPress));
+		dispatcher.Dispatch<MouseButtonReleaseEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnMouseButtonRelease));
+		dispatcher.Dispatch<MouseScrollEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnMouseScroll));
+		dispatcher.Dispatch<MouseMoveEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnMouseMove));
+		dispatcher.Dispatch<KeyPressEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnKeyPress));
+		dispatcher.Dispatch<KeyReleaseEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnKeyRelease));
+		dispatcher.Dispatch<KeyTypedEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnKeyTyped));
+		dispatcher.Dispatch<WindowResizeEvent>(EV_BIND_EVENT_CB(ImguiLayer::OnWindowResize));
 	}
+
+	bool ImguiLayer::OnMouseButtonPress(MouseButtonPressEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.GetButton()] = true;
+
+		return false;
+	}
+
+	bool ImguiLayer::OnMouseButtonRelease(MouseButtonReleaseEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.GetButton()] = false;
+
+		return false;
+	}
+
+	bool ImguiLayer::OnMouseScroll(MouseScrollEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheel += e.GetAmountY();
+		io.MouseWheelH += e.GetAmountX();
+
+		return false;
+	}
+
+	bool ImguiLayer::OnMouseMove(MouseMoveEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(e.GetMouseX(), e.GetMouseY());
+
+		return false;
+	}
+
+	bool ImguiLayer::OnKeyPress(KeyPressEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = true;
+
+		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+		return false;
+	}
+
+	bool ImguiLayer::OnKeyRelease(KeyReleaseEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = false;
+
+		return false;
+	}
+
+	bool ImguiLayer::OnKeyTyped(KeyTypedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.AddInputCharacter(e.GetKeyCode());
+
+		return false;
+	}
+
+	bool ImguiLayer::OnWindowResize(WindowResizeEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		App& app = App::Get();
+		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+
+		return false;
+	}
+
 }
