@@ -17,16 +17,16 @@ namespace Envii
 		int m_KeyCode;
 	};
 
-	class KeyPressedEvent : public KeyEvent
+	class KeyPressEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode, int repeatCount)
+		KeyPressEvent(int keycode, int repeatCount)
 			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " ( " << m_RepeatCount << " repeats )";
+			ss << "KeyPressEvent: " << m_KeyCode << " ( " << m_RepeatCount << " repeats )";
 			return ss.str();
 		}
 
@@ -37,20 +37,19 @@ namespace Envii
 		int m_RepeatCount;
 	};
 
-	class KeyReleasedEvent : public KeyEvent
+	class KeyReleaseEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(int keycode, int repeatCount)
+		KeyReleaseEvent(int keycode)
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << m_KeyCode;
+			ss << "KeyReleaseEvent: " << m_KeyCode;
 			return ss.str();
 		}
 
-		EVENT_TYPE_IFACE(KeyReleased)
-
+		EVENT_TYPE_IFACE(KeyRelease)
 	};
 }

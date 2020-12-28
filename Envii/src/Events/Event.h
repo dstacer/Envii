@@ -1,5 +1,5 @@
 #pragma once
-
+#include <functional>
 #include "Core.h"
 
 namespace Envii
@@ -43,7 +43,7 @@ namespace Envii
 		virtual std::string ToString() const { return GetName(); }
 
 		bool IsInCategory(EventCategory cat) { return GetCategoryFlags() & cat; }
-	protected:
+
 		bool m_handled = false;
 	};
 

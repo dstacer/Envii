@@ -4,6 +4,7 @@
 
 Sandbox::Sandbox()
 {
+	PushLayer(new TestLayer());
 }
 
 Sandbox::~Sandbox()

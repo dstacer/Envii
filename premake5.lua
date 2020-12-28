@@ -9,9 +9,11 @@ outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
 -- Table of include directories for external dependencies
 extIncludeDirs = {}
 extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
+extIncludeDirs["glad"] = "%{wks.name}/thirdparty/glad/include"
 
 -- This includes the premake5.lua file in the glfw project
 include "Envii/thirdparty/glfw"
+include "Envii/thirdparty/glad"
 
 project "Envii"
    location "Envii"
@@ -30,12 +32,14 @@ project "Envii"
    { 
         "%{prj.location}/src",
         "%{wks.location}/Envii/thirdparty/spdlog/include",
-        "%{extIncludeDirs.glfw}"
+        "%{extIncludeDirs.glfw}",
+        "%{extIncludeDirs.glad}"
    }
 
    links 
    {
         "Envii/thirdparty/glfw/" .. bindir .. "glfw.lib",
+        "Envii/thirdparty/glad/" .. bindir .. "glad.lib",
         "opengl32.lib"
    }
 

@@ -31,7 +31,7 @@ namespace Envii
 	{
 	public:
 		MouseScrollEvent(float amountX, float amountY)
-			: m_AmountX(amountX), m_AmountY(amountX) {}
+			: m_AmountX(amountX), m_AmountY(amountY) {}
 		
 		EVENT_TYPE_IFACE(MouseScroll)
 		EVENT_CATEGORY_IFACE(Mouse | Input)
@@ -66,6 +66,9 @@ namespace Envii
 	class MouseButtonPressEvent : public MouseButtonEvent
 	{
 	public:
+		MouseButtonPressEvent(int button)
+			: MouseButtonEvent(button) {}
+
 		EVENT_TYPE_IFACE(MouseButtonPress)
 
 		std::string ToString() const override
@@ -79,6 +82,9 @@ namespace Envii
 	class MouseButtonReleaseEvent : public MouseButtonEvent
 	{
 	public:
+		MouseButtonReleaseEvent(int button)
+			: MouseButtonEvent(button) {}
+
 		EVENT_TYPE_IFACE(MouseButtonRelease)
 		
 		std::string ToString() const override
