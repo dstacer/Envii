@@ -6,9 +6,12 @@
 
 namespace Envii
 {
-#define BIND_EVENT_CB(x) std::bind(&x, this, std::placeholders::_1)
+	#define BIND_EVENT_CB(x) std::bind(&x, this, std::placeholders::_1)
+	App* App::s_Instance = nullptr;
 	App::App()
 	{
+		EV_CORE_ASSERT(!s_Instance, "App already exists.");
+		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_CB(App::OnEvent));
 	}
@@ -48,11 +51,14 @@ namespace Envii
 
 	void App::PushLayer(Layer* layer)
 	{
+		layer->OnAttach();
 		m_LayerStack.PushLayer(layer);
+		
 	}
 
 	void App::PushOverlay(Layer* overlay)
 	{
+		overlay->OnAttach(); 
 		m_LayerStack.PushOverlay(overlay);
 	}
 	

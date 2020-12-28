@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -88,7 +88,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>thirdparty\glfw\bin\Debug\x86_64\glfw.lib;thirdparty\glad\bin\Debug\x86_64\glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thirdparty\glfw\bin\Debug\x86_64\glfw.lib;thirdparty\glad\bin\Debug\x86_64\glad.lib;thirdparty\imgui\bin\Debug\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Debug\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Debug\x86_64\Envii\Envii.lib ..\bin\Debug\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug\x86_64\Envii\Envii.lib ..\bin\Debug\x86_64\Sandbox &gt; nul)</Command>
@@ -100,7 +100,7 @@
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_RELEASE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>thirdparty\glfw\bin\Release\x86_64\glfw.lib;thirdparty\glad\bin\Release\x86_64\glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thirdparty\glfw\bin\Release\x86_64\glfw.lib;thirdparty\glad\bin\Release\x86_64\glad.lib;thirdparty\imgui\bin\Release\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Release\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Release\x86_64\Envii\Envii.lib ..\bin\Release\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release\x86_64\Envii\Envii.lib ..\bin\Release\x86_64\Sandbox &gt; nul)</Command>
@@ -127,7 +127,7 @@
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_DIST;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -142,7 +142,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>thirdparty\glfw\bin\Dist\x86_64\glfw.lib;thirdparty\glad\bin\Dist\x86_64\glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thirdparty\glfw\bin\Dist\x86_64\glfw.lib;thirdparty\glad\bin\Dist\x86_64\glad.lib;thirdparty\imgui\bin\Dist\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Dist\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Dist\x86_64\Envii\Envii.lib ..\bin\Dist\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist\x86_64\Envii\Envii.lib ..\bin\Dist\x86_64\Sandbox &gt; nul)</Command>
@@ -157,18 +157,22 @@
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\Events\KeyEvent.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
+    <ClInclude Include="src\Imgui\ImguiLayer.h" />
     <ClInclude Include="src\Layer.h" />
     <ClInclude Include="src\LayerStack.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3.h" />
     <ClInclude Include="src\Platform\WindowsWindow.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\evpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\Imgui\ImguiLayer.cpp" />
     <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\LayerStack.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Platform\WindowsWindow.cpp" />
     <ClCompile Include="src\evpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

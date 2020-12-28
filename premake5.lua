@@ -10,10 +10,12 @@ outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
 extIncludeDirs = {}
 extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glad"] = "%{wks.name}/thirdparty/glad/include"
+extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
 
--- This includes the premake5.lua file in the glfw project
+-- This includes the premake5.lua files in the subproject dirs
 include "Envii/thirdparty/glfw"
 include "Envii/thirdparty/glad"
+include "Envii/thirdparty/imgui"
 
 project "Envii"
    location "Envii"
@@ -33,13 +35,16 @@ project "Envii"
         "%{prj.location}/src",
         "%{wks.location}/Envii/thirdparty/spdlog/include",
         "%{extIncludeDirs.glfw}",
-        "%{extIncludeDirs.glad}"
+        "%{extIncludeDirs.glad}",
+        "%{extIncludeDirs.imgui}",
+        "%{extIncludeDirs.imgui}/backends"
    }
 
    links 
    {
         "Envii/thirdparty/glfw/" .. bindir .. "glfw.lib",
         "Envii/thirdparty/glad/" .. bindir .. "glad.lib",
+        "Envii/thirdparty/imgui/" .. bindir .. "imgui.lib",
         "opengl32.lib"
    }
 

@@ -4,3 +4,6 @@
 [submodule "Envii/thirdparty/glfw"]
 	path = Envii/thirdparty/glfw
 	url = https://github.com/dstacer/glfw
+[submodule "Envii/thirdparty/imgui"]
+	path = Envii/thirdparty/imgui
+	url = https://github.com/dstacer/imgui

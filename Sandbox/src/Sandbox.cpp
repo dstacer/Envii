@@ -5,6 +5,7 @@
 Sandbox::Sandbox()
 {
 	PushLayer(new TestLayer());
+	PushOverlay(new Envii::ImguiLayer());
 }
 
 Sandbox::~Sandbox()
