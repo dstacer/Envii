@@ -7,3 +7,6 @@
 [submodule "Envii/thirdparty/imgui"]
 	path = Envii/thirdparty/imgui
 	url = https://github.com/dstacer/imgui
+[submodule "Envii/thirdparty/glm"]
+	path = Envii/thirdparty/glm
+	url = https://github.com/g-truc/glm
