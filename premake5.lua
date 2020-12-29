@@ -96,7 +96,8 @@ project "Sandbox"
    includedirs 
    { "%{wks.location}/Envii/src/Client",
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
-     "%{wks.location}/Envii/thirdparty/glm" 
+     "%{wks.location}/Envii/thirdparty/glm", 
+     "%{wks.location}/Envii/thirdparty/imgui" 
    }
    
    links "Envii" 

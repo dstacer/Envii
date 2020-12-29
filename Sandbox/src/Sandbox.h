@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Envii.h"
+#include "imgui.h"
 
 class Sandbox : public Envii::App
 {
@@ -17,10 +18,19 @@ public:
 
 	void OnUpdate() override
 	{
-		EV_APP_TRACE("TestLayer::Update");
+		/*EV_APP_TRACE("TestLayer::Update");
 		if (Envii::Input::IsKeyPressed(EV_KEY_TAB))
 			EV_APP_TRACE("TAB KEY PRESSED");
+		*/
 			
+	}
+
+	void OnImguiRender() 
+	{
+		ImGui::Begin("Sandbox Imgui Test");
+		ImGui::Text("This shit works!");
+		ImGui::End();
+		
 	}
 
 	void OnEvent(Envii::Event& event) override

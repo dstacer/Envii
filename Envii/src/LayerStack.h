@@ -28,6 +28,6 @@ namespace Envii
 
 	private:
 		std::vector<Layer*> m_Layers;
-		std::vector<Layer*>::iterator m_Inserter;
+		uint32_t m_InsertIndex = 0;
 	};
 }

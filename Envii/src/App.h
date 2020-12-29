@@ -4,6 +4,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "Events/AppEvent.h"
+#include "Imgui/ImguiLayer.h"
 
 namespace Envii
 {
@@ -26,9 +27,12 @@ namespace Envii
 		bool OnWindowClose(WindowCloseEvent& event);
 	private:
 		std::unique_ptr<Window> m_Window;
-		bool m_Running = true;
+		ImguiLayer* m_ImguiLayer;
+
 		LayerStack m_LayerStack;
 		static App* s_Instance;
+
+		bool m_Running = true;
 	};
 
 	// Client must define this function to create their own Envii::App

@@ -5,7 +5,6 @@ namespace Envii
 {
 	Envii::LayerStack::LayerStack()
 	{
-		m_Inserter = m_Layers.begin();
 	}
 
 	Envii::LayerStack::~LayerStack()
@@ -16,7 +15,8 @@ namespace Envii
 
 	void Envii::LayerStack::PushLayer(Layer* layer)
 	{
-		m_Inserter = m_Layers.emplace(m_Inserter, layer);
+		m_Layers.emplace(m_Layers.begin() + m_InsertIndex, layer);
+		m_InsertIndex++;
 	}
 
 	void Envii::LayerStack::PopLayer(Layer* layer)
@@ -25,7 +25,7 @@ namespace Envii
 		if (iter != m_Layers.end())
 		{
 			m_Layers.erase(iter);
-			m_Inserter--;
+			m_InsertIndex--;
 		}
 	}
 

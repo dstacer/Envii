@@ -13,8 +13,14 @@ namespace Envii
 	{
 		EV_CORE_ASSERT(!s_Instance, "App already exists.");
 		s_Instance = this;
+
+		// Make our window (single window for now)
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(EV_BIND_EVENT_CB(App::OnEvent));
+
+		// Make our ImguiLayer for UI stuff
+		m_ImguiLayer = new ImguiLayer();
+		PushOverlay(m_ImguiLayer);
 	}
 
 	App::~App()
@@ -32,8 +38,11 @@ namespace Envii
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
-			auto [x, y] = Input::GetMousePos();
-			EV_CORE_TRACE("({0}, {1})", x, y);
+			// Do Imgui rendering for all the layers.
+			m_ImguiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImguiRender();
+			m_ImguiLayer->End();
 
 			// Update our main window
 			m_Window->OnUpdate();

@@ -15,7 +15,12 @@ namespace Envii
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnUpdate() override;
+		virtual void OnImguiRender() override;
+		
+		void Begin();
+		void End();
+		
+		/*virtual void OnUpdate() override;
 		virtual void OnEvent(Event& event) override;
 
 	private:
@@ -26,7 +31,7 @@ namespace Envii
 		bool OnKeyPress(KeyPressEvent& e);
 		bool OnKeyRelease(KeyReleaseEvent& e);
 		bool OnKeyTyped(KeyTypedEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);*/
 	private:
 		float m_Time = 0.0f;
 	};
