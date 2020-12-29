@@ -7,7 +7,7 @@ namespace Envii
 	class Input
 	{
 	public:
-		static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressed(keycode); }
+		static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressedImpl(keycode); }
 		static bool IsMouseButtonPressed(int button) { return s_Instance->IsMouseButtonPressedImpl(button); }
 		static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
 		static float GetMouseY() { return s_Instance->GetMouseYImpl(); }

@@ -8,7 +8,6 @@
 
 namespace Envii
 {
-	//#define BIND_EVENT_CB(x) std::bind(&x, this, std::placeholders::_1)
 	App* App::s_Instance = nullptr;
 	App::App()
 	{

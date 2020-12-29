@@ -18,6 +18,9 @@ public:
 	void OnUpdate() override
 	{
 		EV_APP_TRACE("TestLayer::Update");
+		if (Envii::Input::IsKeyPressed(EV_KEY_TAB))
+			EV_APP_TRACE("TAB KEY PRESSED");
+			
 	}
 
 	void OnEvent(Envii::Event& event) override

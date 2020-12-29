@@ -12,11 +12,13 @@ extIncludeDirs = {}
 extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glad"] = "%{wks.name}/thirdparty/glad/include"
 extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
+extIncludeDirs["glm"] = "%{wks.name}/thirdparty/glm"
 
 group "Dependencies"
 	include "Envii/thirdparty/glfw"
 	include "Envii/thirdparty/glad"
 	include "Envii/thirdparty/imgui"
+    
 group ""
 
 -- This includes the premake5.lua files in the subproject dirs
@@ -44,7 +46,8 @@ project "Envii"
         "%{extIncludeDirs.glfw}",
         "%{extIncludeDirs.glad}",
         "%{extIncludeDirs.imgui}",
-        "%{extIncludeDirs.imgui}/backends"
+        "%{extIncludeDirs.imgui}/backends",
+        "%{extIncludeDirs.glm}"
    }
 
    links 
@@ -90,9 +93,11 @@ project "Sandbox"
 
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-   includedirs { "%{wks.location}/Envii/src/Client",
-                 "%{wks.location}/Envii/thirdparty/spdlog/include" 
-               }
+   includedirs 
+   { "%{wks.location}/Envii/src/Client",
+     "%{wks.location}/Envii/thirdparty/spdlog/include", 
+     "%{wks.location}/Envii/thirdparty/glm" 
+   }
    
    links "Envii" 
    
