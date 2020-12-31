@@ -8,6 +8,8 @@
 
 #include <string>
 #include <sstream>
+#include <fstream>
+
 #include <vector>
 #include <array>
 #include <unordered_map>
@@ -18,4 +20,4 @@
 
 #ifdef EV_PLATFORM_WINDOWS
 	#include <Windows.h>
-#endif
+#endif 

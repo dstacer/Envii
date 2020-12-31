@@ -2,6 +2,7 @@
 #include "Events/AppEvent.h"
 #include "Events/MouseEvent.h"
 #include "Events/KeyEvent.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 #include "WindowsWindow.h"
 
 namespace Envii
@@ -47,16 +48,16 @@ namespace Envii
 			s_GlfwInitialized = true;
 		}
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 		// Create GLFW window
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, 
 									props.Title.c_str(), nullptr, nullptr);
-		
-		// Get our graphics context
-		glfwMakeContextCurrent(m_Window);
 
-		// Load OpenGL procs
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		EV_CORE_ASSERT(status, "GLAD failed to load GL lib.");
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 
 		// Supply the GLFW window with a pointer to our internal data struct
 		glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -162,7 +163,8 @@ namespace Envii
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -179,8 +181,4 @@ namespace Envii
 	{
 		return m_Data.VSync;
 	}
-
-	
-
-	
 }

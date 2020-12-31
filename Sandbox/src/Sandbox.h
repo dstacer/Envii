@@ -35,6 +35,6 @@ public:
 
 	void OnEvent(Envii::Event& event) override
 	{
-		EV_APP_INFO("{0}", event);
+		//EV_APP_INFO("{0}", event);
 	}
 };

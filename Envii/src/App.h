@@ -5,6 +5,9 @@
 #include "Window.h"
 #include "Events/AppEvent.h"
 #include "Imgui/ImguiLayer.h"
+#include "Render/VertexArray.h"
+#include "Render/Buffer.h"
+#include "Render/Shader.h"
 
 namespace Envii
 {
@@ -28,10 +31,15 @@ namespace Envii
 	private:
 		std::unique_ptr<Window> m_Window;
 		ImguiLayer* m_ImguiLayer;
-
 		LayerStack m_LayerStack;
-		static App* s_Instance;
 
+		std::shared_ptr<VertexArray> m_TriVao;
+		std::shared_ptr<VertexArray> m_QuadVao;
+
+		std::shared_ptr<Shader> m_TriShader;
+		std::shared_ptr<Shader> m_QuadShader;
+
+		static App* s_Instance;
 		bool m_Running = true;
 	};
 

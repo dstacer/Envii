@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;EV_PLATFORM_WINDOWS;EV_DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;thirdparty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -90,16 +90,13 @@
     <Lib>
       <AdditionalDependencies>thirdparty\glfw\bin\Debug\x86_64\glfw.lib;thirdparty\glad\bin\Debug\x86_64\glad.lib;thirdparty\imgui\bin\Debug\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Debug\x86_64\Envii\Envii.lib ..\bin\Debug\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug\x86_64\Envii\Envii.lib ..\bin\Debug\x86_64\Sandbox &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_RELEASE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;EV_PLATFORM_WINDOWS;EV_RELEASE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;thirdparty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -117,16 +114,13 @@
     <Lib>
       <AdditionalDependencies>thirdparty\glfw\bin\Release\x86_64\glfw.lib;thirdparty\glad\bin\Release\x86_64\glad.lib;thirdparty\imgui\bin\Release\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Release\x86_64\Envii\Envii.lib ..\bin\Release\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release\x86_64\Envii\Envii.lib ..\bin\Release\x86_64\Sandbox &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>evpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>EV_PLATFORM_WINDOWS;EV_DIST;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;EV_PLATFORM_WINDOWS;EV_DIST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;thirdparty\spdlog\include;thirdparty\glfw\include;thirdparty\glad\include;thirdparty\imgui;thirdparty\imgui\backends;thirdparty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -144,9 +138,6 @@
     <Lib>
       <AdditionalDependencies>thirdparty\glfw\bin\Dist\x86_64\glfw.lib;thirdparty\glad\bin\Dist\x86_64\glad.lib;thirdparty\imgui\bin\Dist\x86_64\imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist\x86_64\Envii\Envii.lib\ (xcopy /Q /E /Y /I ..\bin\Dist\x86_64\Envii\Envii.lib ..\bin\Dist\x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist\x86_64\Envii\Envii.lib ..\bin\Dist\x86_64\Sandbox &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h" />
@@ -164,8 +155,20 @@
     <ClInclude Include="src\LayerStack.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\MouseButtonCodes.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderApi.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Render\Buffer.h" />
+    <ClInclude Include="src\Render\GraphicsContext.h" />
+    <ClInclude Include="src\Render\RenderAPI.h" />
+    <ClInclude Include="src\Render\RenderCommand.h" />
+    <ClInclude Include="src\Render\Renderer.h" />
+    <ClInclude Include="src\Render\Shader.h" />
+    <ClInclude Include="src\Render\VertexArray.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\evpch.h" />
   </ItemGroup>
@@ -176,11 +179,26 @@
     <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\LayerStack.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderApi.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\evpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Render\Buffer.cpp" />
+    <ClCompile Include="src\Render\RenderAPI.cpp" />
+    <ClCompile Include="src\Render\RenderCommand.cpp" />
+    <ClCompile Include="src\Render\Renderer.cpp" />
+    <ClCompile Include="src\Render\Shader.cpp" />
+    <ClCompile Include="src\Render\VertexArray.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\VFAttribColor.glsl" />
+    <None Include="src\VFAttribColor.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

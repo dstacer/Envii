@@ -2,7 +2,7 @@
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-
+#include "Render/GraphicsContext.h"
 #include "Window.h"
 
 namespace Envii
@@ -33,6 +33,7 @@ namespace Envii
 	
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 		
 		struct WindowData
 		{

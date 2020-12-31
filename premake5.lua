@@ -29,13 +29,20 @@ include "Envii/thirdparty/imgui"
 project "Envii"
    location "Envii"
    kind "StaticLib"
+   staticruntime "on"
    language "C++"
+   cppdialect "C++17"
    bindir = "bin/" .. outputdir .. "/"
    targetdir (bindir .. "%{prj.name}")
    objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
 
    pchheader "evpch.h"
    pchsource "%{prj.name}/src/evpch.cpp"
+
+   defines
+   {
+        "_CRT_SECURE_NO_WARNINGS"
+   }
 
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
@@ -59,35 +66,35 @@ project "Envii"
    }
 
    filter "system:windows"
-      cppdialect "C++17"
-      staticruntime "On"
       systemversion "latest"
       defines "EV_PLATFORM_WINDOWS"
 
       postbuildcommands 
       {
-         ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "Sandbox")
+         --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "Sandbox")
       }
    
    filter "configurations:Debug"
-      defines { "EV_DEBUG", "_DEBUG", "_CONSOLE" }
+      defines { "EV_DEBUG", "_DEBUG" }
       runtime "Debug"
-      symbols "On"
+      symbols "on"
 
    filter "configurations:Release"
-      defines { "EV_RELEASE", "NDEBUG", "_CONSOLE" }
+      defines { "EV_RELEASE", "NDEBUG" }
       runtime "Release"
-      optimize "On"
+      optimize "on"
 
    filter "configurations:Dist"
-      defines { "EV_DIST", "NDEBUG", "_CONSOLE" }
+      defines { "EV_DIST", "NDEBUG" }
       runtime "Release"
-      optimize "On"
+      optimize "on"
 
 project "Sandbox"
    location "Sandbox"
    kind "ConsoleApp"
    language "C++"
+   cppdialect "C++17"
+   staticruntime "on"
    targetdir ("bin/" .. outputdir .. "%{prj.name}")
    objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
 
@@ -103,22 +110,20 @@ project "Sandbox"
    links "Envii" 
    
    filter "system:windows"
-      cppdialect "C++17"
-      staticruntime "On"
       systemversion "latest"
       defines "EV_PLATFORM_WINDOWS"
 
    filter "configurations:Debug"
-      defines { "EV_DEBUG", "_DEBUG", "_CONSOLE" }
+      defines { "EV_DEBUG", "_DEBUG" }
       runtime "Debug"
-      symbols "On"
+      symbols "on"
 
    filter "configurations:Release"
-      defines { "EV_RELEASE", "NDEBUG", "_CONSOLE" }
+      defines { "EV_RELEASE", "NDEBUG" }
       runtime "Release"
-      optimize "On"
+      optimize "on"
 
    filter "configurations:Dist"
-      defines { "EV_DIST", "NDEBUG", "_CONSOLE" }
+      defines { "EV_DIST", "NDEBUG" }
       runtime "Release"
-      optimize "On"
+      optimize "on"
