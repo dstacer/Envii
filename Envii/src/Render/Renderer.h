@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include "RenderCommand.h"
+#include "Shader.h"
+#include "OrthoCamera.h"
 
 namespace Envii
 {
@@ -26,10 +28,18 @@ namespace Envii
 	class Renderer
 	{
 	public:
-		static void BeginScene();
+		static void BeginScene(OrthoCamera& camera);
 		static void EndScene();
-		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader);
 
 		inline static RenderApi::Api GetApi() { return RenderApi::GetApi(); }
+
+	private:
+		struct SceneData
+		{
+			glm::mat4 ViewProjMat;
+		};
+
+		static SceneData* s_SceneData;
 	};
 }

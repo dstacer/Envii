@@ -164,6 +164,7 @@
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Render\Buffer.h" />
     <ClInclude Include="src\Render\GraphicsContext.h" />
+    <ClInclude Include="src\Render\OrthoCamera.h" />
     <ClInclude Include="src\Render\RenderAPI.h" />
     <ClInclude Include="src\Render\RenderCommand.h" />
     <ClInclude Include="src\Render\Renderer.h" />
@@ -190,6 +191,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Render\Buffer.cpp" />
+    <ClCompile Include="src\Render\OrthoCamera.cpp" />
     <ClCompile Include="src\Render\RenderAPI.cpp" />
     <ClCompile Include="src\Render\RenderCommand.cpp" />
     <ClCompile Include="src\Render\Renderer.cpp" />
@@ -197,7 +199,6 @@
     <ClCompile Include="src\Render\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\VFAttribColor.glsl" />
     <None Include="src\VFAttribColor.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

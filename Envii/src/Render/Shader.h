@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <glm/glm.hpp>
+
 namespace Envii
 {
 	enum class ShaderType
@@ -22,5 +24,15 @@ namespace Envii
 
 		static Shader* Create(const std::string& filepath);
 		static Shader* Create(const std::string& vertSrc, const std::string& fragSrc);
+
+		void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
+
+		/*void SetUniformMat3f(const std::string& name, const glm::mat3& matrix);
+		void SetUniform4f(const std::string& name, float f1, float f2, float f3, float f4);
+		void SetUniform3f(const std::string& name, float f1, float f2, float f3);
+		void SetUniform2f(const std::string& name, float f1, float f2);
+		void SetUniform1f(const std::string& name, float f1);
+		void SetUniform1i(const std::string& name, unsigned int val);
+		void SetUniform1iv(const std::string& name, unsigned int size, int* vals);*/
 	};
 }

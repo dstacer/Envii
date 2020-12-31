@@ -65,6 +65,7 @@
     <ClInclude Include="src\Render\RenderAPI.h" />
     <ClInclude Include="src\Render\RenderCommand.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderApi.h" />
+    <ClInclude Include="src\Render\OrthoCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
@@ -95,9 +96,9 @@
     <ClCompile Include="src\Render\RenderAPI.cpp" />
     <ClCompile Include="src\Render\RenderCommand.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderApi.cpp" />
+    <ClCompile Include="src\Render\OrthoCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\VFAttribColor.glsl" />
     <None Include="src\VFAttribColor.glsl" />
   </ItemGroup>
 </Project>

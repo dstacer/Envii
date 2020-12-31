@@ -8,6 +8,7 @@
 #include "Render/VertexArray.h"
 #include "Render/Buffer.h"
 #include "Render/Shader.h"
+#include "Render/OrthoCamera.h"
 
 namespace Envii
 {
@@ -38,6 +39,7 @@ namespace Envii
 
 		std::shared_ptr<Shader> m_TriShader;
 		std::shared_ptr<Shader> m_QuadShader;
+		std::shared_ptr<OrthoCamera> m_Camera;
 
 		static App* s_Instance;
 		bool m_Running = true;

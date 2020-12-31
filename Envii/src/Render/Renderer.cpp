@@ -22,17 +22,22 @@ namespace Envii
         return true;
     }
 
-    void Renderer::BeginScene()
+    Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData();
+
+    void Renderer::BeginScene(OrthoCamera& camera)
     {
+        s_SceneData->ViewProjMat = camera.GetViewProjection();
     }
 
     void Renderer::EndScene()
     {
     }
 
-    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
+    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader)
     {
         vertexArray->Bind();
+        shader->Bind();
+        shader->SetUniformMat4f("u_MVP", s_SceneData->ViewProjMat);
         RenderCommand::DrawIndexed(vertexArray);
     }
 }

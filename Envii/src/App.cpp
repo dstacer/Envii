@@ -5,6 +5,7 @@
 #include "Core.h"
 #include "Input.h"
 #include "Render/Renderer.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Envii
 {	
@@ -72,6 +73,9 @@ namespace Envii
 		m_QuadVao->AddVertexBuffer(quadVb);
 		m_QuadVao->SetIndexBuffer(quadIb);
 
+		// Create camera
+		m_Camera.reset(new OrthoCamera(glm::ortho(-3.2f, 3.2f, -1.8f, 1.8f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+
 		// Create shaders
 		std::string vertSrc = 
 		R"(#version 330 core
@@ -80,10 +84,11 @@ namespace Envii
 		layout (location = 1) in vec4 a_Color;
 
 		out vec4 v_Color;
+		uniform mat4 u_MVP;
 
 		void main()
 		{
-			gl_Position = a_Pos;
+			gl_Position = u_MVP * a_Pos;
 			v_Color = a_Color;
 		})";
 
@@ -106,10 +111,11 @@ namespace Envii
 
 		layout (location = 0) in vec3 a_Pos;
 		out vec3 v_pos;
+		uniform mat4 u_MVP;
 
 		void main()
 		{
-			gl_Position = vec4(a_Pos, 1.0);
+			gl_Position = u_MVP * vec4(a_Pos, 1.0);
 			v_pos = a_Pos;
 		})";
 
@@ -138,15 +144,15 @@ namespace Envii
 			RenderCommand::SetClearColor( { 0.4f, 0.4f, 0.4f, 1.0f } );
 			RenderCommand::Clear();
 			
-			m_QuadShader->Bind();
-			Renderer::Submit(m_QuadVao);
-			//glDrawElements(GL_TRIANGLES, m_QuadVao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			m_Camera->SetRotation(45.f);
+			m_Camera->SetPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+			Renderer::BeginScene(*m_Camera);
+
+			Renderer::Submit(m_QuadVao, m_QuadShader);
+			Renderer::Submit(m_TriVao, m_TriShader);
+
+			Renderer::EndScene();
 			
-			m_TriShader->Bind();
-
-			Renderer::Submit(m_TriVao);
-			//glDrawElements(GL_TRIANGLES, m_TriVao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
 			// Update all the layers
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
