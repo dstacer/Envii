@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Events/Event.h"
+#include "Core/Timestep.h"
 
 namespace Envii
 {
@@ -13,7 +14,7 @@ namespace Envii
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(TimeStep ts) {}
 		virtual void OnImguiRender() {}
 		virtual void OnEvent(Event& event) {}
 

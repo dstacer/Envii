@@ -1,6 +1,9 @@
 #include <iostream>
 
+#include "EntryPoint.h"
 #include "Sandbox.h"
+#include "TestLayer.h"
+
 
 Sandbox::Sandbox()
 {

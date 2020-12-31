@@ -33,11 +33,14 @@ namespace Envii
     {
     }
 
-    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader)
+    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, 
+                          const std::shared_ptr<Shader>& shader,
+                          const glm::mat4& transform)
     {
         vertexArray->Bind();
         shader->Bind();
-        shader->SetUniformMat4f("u_MVP", s_SceneData->ViewProjMat);
+        shader->SetUniformMat4f("u_VP", s_SceneData->ViewProjMat);
+        shader->SetUniformMat4f("u_Transform", transform);
         RenderCommand::DrawIndexed(vertexArray);
     }
 }

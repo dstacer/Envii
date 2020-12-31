@@ -29,17 +29,12 @@ namespace Envii
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
+
 	private:
 		std::unique_ptr<Window> m_Window;
 		ImguiLayer* m_ImguiLayer;
 		LayerStack m_LayerStack;
-
-		std::shared_ptr<VertexArray> m_TriVao;
-		std::shared_ptr<VertexArray> m_QuadVao;
-
-		std::shared_ptr<Shader> m_TriShader;
-		std::shared_ptr<Shader> m_QuadShader;
-		std::shared_ptr<OrthoCamera> m_Camera;
+		float m_LastFrameTime = 0.0f;
 
 		static App* s_Instance;
 		bool m_Running = true;

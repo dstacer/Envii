@@ -23,7 +23,6 @@
       <Filter>Client</Filter>
     </ClInclude>
     <ClInclude Include="src\Core.h" />
-    <ClInclude Include="src\EntryPoint.h" />
     <ClInclude Include="src\Events\AppEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -66,6 +65,8 @@
     <ClInclude Include="src\Render\RenderCommand.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderApi.h" />
     <ClInclude Include="src\Render\OrthoCamera.h" />
+    <ClInclude Include="src\Client\EntryPoint.h" />
+    <ClInclude Include="src\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
@@ -97,8 +98,5 @@
     <ClCompile Include="src\Render\RenderCommand.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderApi.cpp" />
     <ClCompile Include="src\Render\OrthoCamera.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\VFAttribColor.glsl" />
   </ItemGroup>
 </Project>

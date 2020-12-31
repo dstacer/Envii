@@ -143,7 +143,8 @@
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\Client\Envii.h" />
     <ClInclude Include="src\Core.h" />
-    <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\Client\EntryPoint.h" />
+    <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\Events\AppEvent.h" />
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\Events\KeyEvent.h" />
@@ -197,9 +198,6 @@
     <ClCompile Include="src\Render\Renderer.cpp" />
     <ClCompile Include="src\Render\Shader.cpp" />
     <ClCompile Include="src\Render\VertexArray.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\VFAttribColor.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

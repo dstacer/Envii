@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Envii.h"
+
 #ifdef EV_PLATFORM_WINDOWS
 
 extern Envii::App* Envii::CreateApp();
