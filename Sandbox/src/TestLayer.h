@@ -14,12 +14,12 @@ public:
 	bool OnKeyPressEvent(Envii::KeyPressEvent& event);
 
 private:
-	std::shared_ptr<Envii::VertexArray> m_TriVao;
-	std::shared_ptr<Envii::VertexArray> m_QuadVao;
+	Envii::Ref<Envii::VertexArray> m_TriVao;
+	Envii::Ref<Envii::VertexArray> m_QuadVao;
 
-	std::shared_ptr<Envii::Shader> m_TriShader;
-	std::shared_ptr<Envii::Shader> m_QuadShader;
-	std::shared_ptr<Envii::OrthoCamera> m_Camera;
+	Envii::Ref<Envii::Shader> m_TriShader;
+	Envii::Ref<Envii::Shader> m_QuadShader;
+	Envii::Ref<Envii::OrthoCamera> m_Camera;
 
 	glm::vec3 m_TriPos, m_QuadPos;
 };

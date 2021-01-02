@@ -9,10 +9,11 @@ outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
 
 -- Table of include directories for external dependencies
 extIncludeDirs = {}
-extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glad"] = "%{wks.name}/thirdparty/glad/include"
-extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
+extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glm"] = "%{wks.name}/thirdparty/glm"
+extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
+extIncludeDirs["stb_image"] = "%{wks.name}/thirdparty/stb_image"
 
 group "Dependencies"
 	include "Envii/thirdparty/glfw"
@@ -44,7 +45,10 @@ project "Envii"
         "_CRT_SECURE_NO_WARNINGS"
    }
 
-   files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
+   files { "%{prj.name}/src/**.h", 
+           "%{prj.name}/src/**.cpp",
+           "%{prj.name}/thirdparty/stb_image/**.*"
+         }
 
    includedirs 
    { 
@@ -54,7 +58,8 @@ project "Envii"
         "%{extIncludeDirs.glad}",
         "%{extIncludeDirs.imgui}",
         "%{extIncludeDirs.imgui}/backends",
-        "%{extIncludeDirs.glm}"
+        "%{extIncludeDirs.glm}",
+        "%{extIncludeDirs.stb_image}"
    }
 
    links 

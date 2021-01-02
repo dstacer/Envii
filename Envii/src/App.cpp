@@ -20,7 +20,7 @@ namespace Envii
 		s_Instance = this;
 
 		// Make our window (single window for now)
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window =  Scoped<Window>(Window::Create());
 		m_Window->SetEventCallback(EV_BIND_EVENT_CB(App::OnEvent));
 		//m_Window->SetVSync(false);
 

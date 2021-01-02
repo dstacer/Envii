@@ -16,7 +16,7 @@ TestLayer::TestLayer()
 	m_TriVao.reset(Envii::VertexArray::Create());
 
 	// Create vertex buffer and layout
-	std::shared_ptr<Envii::VertexBuffer> triVb;
+	Envii::Ref<Envii::VertexBuffer> triVb;
 	triVb.reset(Envii::VertexBuffer::Create(vertices, sizeof(vertices)));
 	triVb->SetLayout({
 		{ Envii::ShaderDataType::Float3, "a_Pos" },
@@ -25,7 +25,7 @@ TestLayer::TestLayer()
 
 	// Create index buffer
 	uint32_t indices[] = { 0, 1, 2 };
-	std::shared_ptr<Envii::IndexBuffer> triIb;
+	Envii::Ref<Envii::IndexBuffer> triIb;
 	triIb.reset(Envii::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
 	m_TriVao->AddVertexBuffer(triVb);
@@ -42,7 +42,7 @@ TestLayer::TestLayer()
 	m_QuadVao.reset(Envii::VertexArray::Create());
 
 	// Create vertex buffer and layout
-	std::shared_ptr<Envii::VertexBuffer> quadVb;
+	Envii::Ref<Envii::VertexBuffer> quadVb;
 	quadVb.reset(Envii::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
 	quadVb->SetLayout({
 		{ Envii::ShaderDataType::Float3, "a_Pos" },
@@ -50,7 +50,7 @@ TestLayer::TestLayer()
 
 	// Create index buffer
 	uint32_t quadIndices[] = { 0, 1, 2, 2, 3, 0 };
-	std::shared_ptr<Envii::IndexBuffer> quadIb;
+	Envii::Ref<Envii::IndexBuffer> quadIb;
 	quadIb.reset(Envii::IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t)));
 
 	m_QuadVao->AddVertexBuffer(quadVb);
@@ -156,9 +156,9 @@ void TestLayer::OnUpdate(Envii::TimeStep ts)
 
 	Envii::Renderer::BeginScene(*m_Camera);
 	glm::mat4 scale = glm::scale(glm::mat4(1.f), { 0.1f, 0.1f, 0.1f } );
-	for (int y = 0; y < 30; y++)
+	for (int y = 0; y < 20; y++)
 	{
-		for (int x = 0; x < 40; x++)
+		for (int x = 0; x < 20; x++)
 		{
 			glm::vec3 pos = { 0.1f * x, 0.1 * y, 0.0f };
 			glm::mat4 trans = glm::translate(glm::mat4(1.f), pos) * scale;
@@ -174,7 +174,7 @@ void TestLayer::OnUpdate(Envii::TimeStep ts)
 void TestLayer::OnImguiRender()
 {
 	ImGui::Begin("Sandbox Imgui Test");
-	ImGui::DragFloat3("Tri Position:", glm::value_ptr(m_TriPos));
+	ImGui::SliderFloat3("Tri Position:", glm::value_ptr(m_TriPos),-2.f, 2.f);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }

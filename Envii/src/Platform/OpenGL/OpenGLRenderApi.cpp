@@ -15,7 +15,7 @@ namespace Envii
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRenderApi::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) const
+	void OpenGLRenderApi::DrawIndexed(const Ref<VertexArray>& vertexArray) const
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 

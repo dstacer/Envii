@@ -28,6 +28,8 @@ namespace Envii
 			EV_CORE_ASSERT(false, "Undefined ShaderDataType: {0}", type);
 			return 999;
 		}
+
+		return 999;
 	}
 
 	struct BufferElement
@@ -64,7 +66,10 @@ namespace Envii
 				EV_CORE_ASSERT(false, "Undefined ShaderDataType: {0}", type);
 				return 0;
 			}
+			return 0;
 		}
+
+		
 	};
 
 	class BufferLayout

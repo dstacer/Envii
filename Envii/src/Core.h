@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #ifdef EV_PLATFORM_WINDOWS
 	#define EV_API
 #else
@@ -22,3 +23,12 @@
 #endif
 
 #define EV_BIND_EVENT_CB(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Envii
+{
+	template<typename T>
+	using Scoped = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

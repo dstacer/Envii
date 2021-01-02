@@ -10,21 +10,23 @@ namespace Envii
 	{
 		switch (type)
 		{
-		case ShaderDataType::Float:		return GL_FLOAT;
-		case ShaderDataType::Float2:	return GL_FLOAT;
-		case ShaderDataType::Float3:	return GL_FLOAT;
-		case ShaderDataType::Float4:	return GL_FLOAT;
-		case ShaderDataType::Mat3:		return GL_FLOAT;
-		case ShaderDataType::Mat4:		return GL_FLOAT;
-		case ShaderDataType::Int:		return GL_INT;
-		case ShaderDataType::Int2:		return GL_INT;
-		case ShaderDataType::Int3:		return GL_INT;
-		case ShaderDataType::Int4:		return GL_INT;
-		case ShaderDataType::Bool:		return GL_BOOL;
+			case ShaderDataType::Float:		return GL_FLOAT;
+			case ShaderDataType::Float2:	return GL_FLOAT;
+			case ShaderDataType::Float3:	return GL_FLOAT;
+			case ShaderDataType::Float4:	return GL_FLOAT;
+			case ShaderDataType::Mat3:		return GL_FLOAT;
+			case ShaderDataType::Mat4:		return GL_FLOAT;
+			case ShaderDataType::Int:		return GL_INT;
+			case ShaderDataType::Int2:		return GL_INT;
+			case ShaderDataType::Int3:		return GL_INT;
+			case ShaderDataType::Int4:		return GL_INT;
+			case ShaderDataType::Bool:		return GL_BOOL;
 
 			EV_CORE_ASSERT(false, "Undefined ShaderDataType: {0}", type);
 			return 0;
 		}
+
+		return 0;
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray()
@@ -49,7 +51,7 @@ namespace Envii
 		GlApiCall(glBindVertexArray(0));
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vbuf)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vbuf)
 	{
 		EV_CORE_ASSERT(vbuf->GetLayout().GetElements().size(), "Vertex buffer layout has no elements.");
 		
@@ -70,7 +72,7 @@ namespace Envii
 		m_Vbufs.push_back(vbuf);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& ibuf)
+	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& ibuf)
 	{
 		GlApiCall(glBindVertexArray(m_Id));
 		ibuf->Bind(); 

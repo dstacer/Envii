@@ -31,7 +31,7 @@ namespace Envii
 		bool OnWindowClose(WindowCloseEvent& event);
 
 	private:
-		std::unique_ptr<Window> m_Window;
+		Scoped<Window> m_Window;
 		ImguiLayer* m_ImguiLayer;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
