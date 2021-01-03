@@ -43,16 +43,19 @@ namespace Envii
 			TimeStep elapsedTime(time - m_LastFrameTime);
 			m_LastFrameTime = time;
 
-			// Update all the layers
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(elapsedTime);
+			if (!m_Minimized)
+			{
+				// Update all the layers
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(elapsedTime);
+			}
 
 			// Do Imgui rendering for all the layers.
 			m_ImguiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImguiRender();
 			m_ImguiLayer->End();
-
+		
 			// Update our main window
 			m_Window->OnUpdate();
 		}
@@ -62,6 +65,7 @@ namespace Envii
 	{
 		EventDispatcher d(event);
 		d.Dispatch<WindowCloseEvent>(EV_BIND_EVENT_CB(App::OnWindowClose));
+		d.Dispatch<WindowResizeEvent>(EV_BIND_EVENT_CB(App::OnWindowResize));
 		
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -88,5 +92,19 @@ namespace Envii
 	{
 		m_Running = false;
 		return true;
+	}
+
+	bool App::OnWindowResize(WindowResizeEvent& event)
+	{
+		if (event.GetWidth() == 0 || event.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+
+		return false;
 	}
 }

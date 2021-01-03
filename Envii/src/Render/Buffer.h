@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include "../Core/Log.h"
+#include "../Core/Core.h"
 
 namespace Envii
 {

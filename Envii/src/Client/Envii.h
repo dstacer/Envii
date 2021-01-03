@@ -1,15 +1,15 @@
 #pragma once
 
 // This is an include file for client apps only
-#include "../App.h"
-#include "../Layer.h"
-#include "../Log.h"
+#include "../Core/App.h"
+#include "../Core/Layer.h"
+#include "../Core/Log.h"
 #include "../Core/Timestep.h"
 
 // Input
-#include "../Input.h"
-#include "../KeyCodes.h"
-#include "../MouseButtonCodes.h"
+#include "../Core/Input.h"
+#include "../Core/KeyCodes.h"
+#include "../Core/MouseButtonCodes.h"
 
 // UI
 #include "../Imgui/ImguiLayer.h"
@@ -23,4 +23,4 @@
 #include "../Render/Shader.h"
 #include "../Render/Texture.h"
 
-#include "../CameraController.h"
+#include "../Render/CameraController.h"

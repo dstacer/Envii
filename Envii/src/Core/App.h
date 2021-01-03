@@ -3,12 +3,12 @@
 #include "LayerStack.h"
 #include "Core.h"
 #include "Window.h"
-#include "Events/AppEvent.h"
-#include "Imgui/ImguiLayer.h"
-#include "Render/VertexArray.h"
-#include "Render/Buffer.h"
-#include "Render/Shader.h"
-#include "Render/OrthoCamera.h"
+#include "../Events/AppEvent.h"
+#include "../Imgui/ImguiLayer.h"
+#include "../Render/VertexArray.h"
+#include "../Render/Buffer.h"
+#include "../Render/Shader.h"
+#include "../Render/OrthoCamera.h"
 
 namespace Envii
 {
@@ -29,6 +29,7 @@ namespace Envii
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 	private:
 		Scoped<Window> m_Window;
@@ -38,6 +39,7 @@ namespace Envii
 
 		static App* s_Instance;
 		bool m_Running = true;
+		bool m_Minimized = false;
 	};
 
 	// Client must define this function to create their own Envii::App

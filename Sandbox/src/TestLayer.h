@@ -7,6 +7,8 @@ class TestLayer : public Envii::Layer
 public:
 	TestLayer();
 
+	void OnAttach() override;
+	void OnDetach() override;
 	void OnUpdate(Envii::TimeStep) override;
 	void OnImguiRender() override;
 	void OnEvent(Envii::Event& event) override;

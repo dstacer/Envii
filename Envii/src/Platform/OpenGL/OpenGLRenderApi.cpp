@@ -39,6 +39,11 @@ namespace Envii
 		}
 	}
 
+	void OpenGLRenderApi::SetViewport(uint32_t bottomX, uint32_t bottomY, uint32_t width, uint32_t height) const
+	{
+		GlApiCall(glViewport(bottomX, bottomY, width, height));
+	}
+
 	void OpenGLRenderApi::DrawIndexed(const Ref<VertexArray>& vertexArray) const
 	{
 		GlApiCall(glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr));

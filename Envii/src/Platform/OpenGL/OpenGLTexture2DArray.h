@@ -24,6 +24,6 @@ namespace Envii
 		std::vector<std::string> m_Filepaths;
 		unsigned char* m_Buffers[16];
 		int m_Width, m_Height, m_Channels;
-		int m_Layers;
+		uint32_t m_Layers;
 	};
 }

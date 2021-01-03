@@ -23,9 +23,9 @@ namespace Envii
 		UpdateView();
 	}
 
-	void OrthoCamera::SetProjection(float aspectRatio, float zoomLevel)
+	void OrthoCamera::SetProjection(float aspectRatio, float verticalExtent)
 	{
-		m_ProjMat = glm::ortho(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		m_ProjMat = glm::ortho(-aspectRatio * verticalExtent, aspectRatio * verticalExtent, -verticalExtent, verticalExtent);
 		m_ViewProjMat = m_ProjMat * m_ViewMat;
 	}
 

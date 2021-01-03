@@ -12,7 +12,7 @@ namespace Envii
 		  m_Width(0),
 		  m_Height(0),
 		  m_Channels(0),
-		  m_Layers(filepaths.size() + 1)
+		  m_Layers((uint32_t)filepaths.size() + 1)
 	{
 		// data is flipped for .png.  Must set appropriate for other
 		// texture formats
@@ -62,7 +62,7 @@ namespace Envii
 
 		// The following link helps clarify the uploading of the texture data in this loop:
 		// https://stackoverflow.com/questions/52339703/problems-using-gltexsubimage3d-correctly
-		for (int i = 0; i < m_Layers; ++i)
+		for (uint32_t i = 0; i < m_Layers; ++i)
 		{
 			GlApiCall(glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, m_Width, m_Height,
 				1, dataFormat, GL_UNSIGNED_BYTE, m_Buffers[i]));

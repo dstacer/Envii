@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Events/Event.h"
-#include "Core/Timestep.h"
+#include "../Events/Event.h"
+#include "../Core/Timestep.h"
 
 namespace Envii
 {

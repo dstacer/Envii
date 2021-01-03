@@ -20,6 +20,7 @@ namespace Envii
 		virtual void SetClearColor(const glm::vec4& color) const = 0;
 		virtual void SetBlendFunc(uint32_t srcFactor, uint32_t destFactor) const = 0;
 		virtual void SetBlendEnable(bool enable) const = 0;
+		virtual void SetViewport(uint32_t bottomX, uint32_t bottomY, uint32_t width, uint32_t height) const = 0;
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) const = 0;
 

@@ -5,9 +5,14 @@
 
 TestLayer::TestLayer()
 	: Envii::Layer("TestLayer"), 
-	  m_Pos(glm::vec3(0.f)), 
-	  m_SquarePos(glm::vec3(0.f)),
+	  m_Pos(0.f), 
+	  m_SquarePos(0.f),
 	  m_CamCtl(1.778f)
+{
+	
+}
+
+void TestLayer::OnAttach()
 {
 	float vertices[] = {
 		-0.6f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -72,6 +77,10 @@ TestLayer::TestLayer()
 	m_SquareTex->Bind(1);
 }
 
+void TestLayer::OnDetach()
+{
+}
+
 void TestLayer::OnUpdate(Envii::TimeStep ts)
 {
 	// Object positions
@@ -114,7 +123,7 @@ void TestLayer::OnImguiRender()
 	ImGui::End();
 }
 
-void TestLayer::OnEvent(Envii::Event& event) 
+void TestLayer::OnEvent(Envii::Event& event)
 {
 	m_CamCtl.OnEvent(event);
 

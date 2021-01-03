@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Render/GraphicsContext.h"
-#include "Window.h"
+#include "Core/Window.h"
 
 namespace Envii
 {

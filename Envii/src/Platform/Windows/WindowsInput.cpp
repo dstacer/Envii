@@ -1,7 +1,7 @@
 #include "evpch.h"
 
 #include "GLFW/glfw3.h"
-#include "App.h"
+#include "Core/App.h"
 #include "WindowsInput.h"
 
 namespace Envii

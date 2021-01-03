@@ -10,7 +10,7 @@ namespace Envii
 		OrthoCamera(const glm::mat4& projMat, const glm::vec3& pos);
 		OrthoCamera(float left, float right, float top, float bottom);
 
-		void SetProjection(float aspectRatio, float zoomLevel);
+		void SetProjection(float aspectRatio, float verticalExtent);
 		inline void SetProjection(const glm::mat4 projMat) { m_ProjMat = projMat; }
 		inline void SetView(const glm::mat4& viewMat) { m_ViewMat = viewMat; }
 		
