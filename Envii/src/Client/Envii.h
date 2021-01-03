@@ -21,9 +21,6 @@
 #include "../Render/VertexArray.h"
 #include "../Render/Buffer.h"
 #include "../Render/Shader.h"
+#include "../Render/Texture.h"
 
 #include "../Render/OrthoCamera.h"
-
-// ************ App Entry point *******************
-//#include "../EntryPoint.h"
-// ************************************************

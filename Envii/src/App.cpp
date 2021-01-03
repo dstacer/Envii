@@ -22,7 +22,9 @@ namespace Envii
 		// Make our window (single window for now)
 		m_Window =  Scoped<Window>(Window::Create());
 		m_Window->SetEventCallback(EV_BIND_EVENT_CB(App::OnEvent));
-		//m_Window->SetVSync(false);
+
+		// Init Renderer - currently just sets blending options
+		Renderer::Init();
 
 		// Make our ImguiLayer for UI stuff
 		m_ImguiLayer = new ImguiLayer();

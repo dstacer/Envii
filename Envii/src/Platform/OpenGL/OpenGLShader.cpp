@@ -12,9 +12,17 @@ namespace Envii
 		: m_FilePath(filepath)
 	{
 		m_Id = CreateShaderProgram(ParseShaders(filepath));
+        
+        // Create name by extracting filename wihout extension
+        auto lastSlash = filepath.find_last_of("/\\");
+        lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+        auto lastDot = filepath.rfind('.');
+        auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+        m_Name = filepath.substr(lastSlash, count);
 	}
 
-    OpenGLShader::OpenGLShader(const std::string& vertSrc, const std::string& fragSrc)
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertSrc, const std::string& fragSrc)
+        : m_Name(name)
     {
         m_Id = CreateShaderProgram(vertSrc, fragSrc);
     }
@@ -33,7 +41,7 @@ namespace Envii
         GlApiCall(glUseProgram(0));
     }
 
-    GLuint OpenGLShader::CreateShaderProgram(const std::map<ShaderType, std::string> sourceMap)
+    GLuint OpenGLShader::CreateShaderProgram(const std::unordered_map<ShaderType, std::string> sourceMap)
     {
         EV_CORE_ASSERT(sourceMap.size() > 0, "Empty shader sources from parser.");
         GlApiCall(GLuint program = glCreateProgram());
@@ -47,6 +55,27 @@ namespace Envii
         }
 
         GlApiCall(glLinkProgram(program));
+
+        GLint isLinked = 0;
+        GlApiCall(glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked));
+        if (isLinked == GL_FALSE)
+        {
+            GLint msgLen;
+            GlApiCall(glGetShaderiv(program, GL_INFO_LOG_LENGTH, &msgLen));
+            char* msg = (char*)_malloca(msgLen * sizeof(char));
+            GlApiCall(glGetShaderInfoLog(program, msgLen, &msgLen, msg));
+
+            // We don't need the program anymore.
+            glDeleteProgram(program);
+
+            for (auto id : shaderHandles)
+                glDeleteShader(id);
+
+            EV_CORE_ERROR("{0}", msg);
+            EV_CORE_ASSERT(false, "Shader link failure!");
+            return 0;
+        }
+
         GlApiCall(glValidateProgram(program));
 
         for (GLuint handle : shaderHandles)
@@ -78,16 +107,16 @@ namespace Envii
     }
 
     // This function handles a combination of shaders in a single file
-    std::map<ShaderType, std::string> OpenGLShader::ParseShaders(const std::string& srcPath)
+    std::unordered_map<ShaderType, std::string> OpenGLShader::ParseShaders(const std::string& srcPath)
     {
-        std::ifstream instream(srcPath);
-        EV_CORE_ASSERT(instream, "Cannot open file input stream.");
+        std::ifstream instr(srcPath, std::ios::in | std::ios::binary);
+        EV_CORE_ASSERT(instr, "Cannot open file input stream.");
         std::stringstream sources[(int)ShaderType::NUM_TYPES];
-        std::map<ShaderType, std::string> retMap;
+        std::unordered_map<ShaderType, std::string> retMap;
         ShaderType type(ShaderType::NONE);
 
         std::string line;
-        while (getline(instream, line))
+        while (getline(instr, line))
         {
             if (line.find("#shader") != std::string::npos)
             {
@@ -126,8 +155,8 @@ namespace Envii
             GlApiCall(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &msgLen));
             char* msg = (char*)_malloca(msgLen * sizeof(char));
             GlApiCall(glGetShaderInfoLog(shaderId, msgLen, &msgLen, msg));
-            std::string typeStr = (shaderType == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
-            std::cout << typeStr << " Shader compilation failed: " << msg << std::endl;
+            //std::string typeStr = shaderTypeStringMap[shaderType];// (shaderType == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
+            EV_CORE_ERROR("{0} Shader compilation failed: {1}", shaderTypeStringMap[shaderType], msg);
             GlApiCall(glDeleteShader(shaderId));
 
             return 0;

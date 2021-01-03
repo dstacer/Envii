@@ -4,7 +4,7 @@
 
 namespace Envii
 {
-	Texture2DArray* Texture2DArray::Create(const std::vector<std::string> filepaths)
+	Ref<Texture2DArray> Texture2DArray::Create(const std::vector<std::string> filepaths, uint32_t texSlot)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -15,7 +15,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLTexture2DArray(filepaths);
+				return std::make_shared<OpenGLTexture2DArray>(filepaths, texSlot);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

@@ -172,8 +172,7 @@
     <ClInclude Include="src\Render\RenderCommand.h" />
     <ClInclude Include="src\Render\Renderer.h" />
     <ClInclude Include="src\Render\Shader.h" />
-    <ClInclude Include="src\Render\Texture2D.h" />
-    <ClInclude Include="src\Render\Texture2DArray.h" />
+    <ClInclude Include="src\Render\Texture.h" />
     <ClInclude Include="src\Render\VertexArray.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\evpch.h" />

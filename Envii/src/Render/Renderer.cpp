@@ -24,6 +24,11 @@ namespace Envii
 
     Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData();
 
+    void Renderer::Init()
+    {
+        RenderCommand::Init();
+    }
+
     void Renderer::BeginScene(OrthoCamera& camera)
     {
         s_SceneData->ViewProjMat = camera.GetViewProjection();

@@ -14,12 +14,13 @@ public:
 	bool OnKeyPressEvent(Envii::KeyPressEvent& event);
 
 private:
-	Envii::Ref<Envii::VertexArray> m_TriVao;
-	Envii::Ref<Envii::VertexArray> m_QuadVao;
+	Envii::Ref<Envii::VertexArray> m_Vao;
+	Envii::Ref<Envii::VertexArray> m_SquareVao;
 
-	Envii::Ref<Envii::Shader> m_TriShader;
-	Envii::Ref<Envii::Shader> m_QuadShader;
+	Envii::ShaderLibrary m_ShaderLib;
 	Envii::Ref<Envii::OrthoCamera> m_Camera;
+	Envii::Ref<Envii::Texture2D> m_Tex;
+	Envii::Ref<Envii::Texture2D> m_SquareTex;
 
-	glm::vec3 m_TriPos, m_QuadPos;
+	glm::vec3 m_Pos, m_SquarePos;
 };

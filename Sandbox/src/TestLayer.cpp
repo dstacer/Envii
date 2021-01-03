@@ -4,124 +4,78 @@
 #include "imgui.h"
 
 TestLayer::TestLayer()
-	: Envii::Layer("TestLayer"), m_TriPos(glm::vec3(0.f)), m_QuadPos(glm::vec3(0.f))
+	: Envii::Layer("TestLayer"), m_Pos(glm::vec3(0.f)), m_SquarePos(glm::vec3(0.f))
 {
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		-0.6f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.6f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+		 0.6f,  0.25f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+		-0.6f,  0.25f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
 	};
 
 	// Create vertex array
-	m_TriVao.reset(Envii::VertexArray::Create());
+	m_Vao = Envii::VertexArray::Create();
 
 	// Create vertex buffer and layout
-	Envii::Ref<Envii::VertexBuffer> triVb;
-	triVb.reset(Envii::VertexBuffer::Create(vertices, sizeof(vertices)));
-	triVb->SetLayout({
+	Envii::Ref<Envii::VertexBuffer> Vb;
+	Vb = Envii::VertexBuffer::Create(vertices, sizeof(vertices));
+	Vb->SetLayout({
 		{ Envii::ShaderDataType::Float3, "a_Pos" },
-		{ Envii::ShaderDataType::Float4, "a_Color" }
-		});
+		{ Envii::ShaderDataType::Float4, "a_Color" },
+		{ Envii::ShaderDataType::Float2, "a_TexCoord" }
+	});
 
 	// Create index buffer
-	uint32_t indices[] = { 0, 1, 2 };
-	Envii::Ref<Envii::IndexBuffer> triIb;
-	triIb.reset(Envii::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+	uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
+	Envii::Ref<Envii::IndexBuffer> Ib;
+	Ib = Envii::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
-	m_TriVao->AddVertexBuffer(triVb);
-	m_TriVao->SetIndexBuffer(triIb);
+	m_Vao->AddVertexBuffer(Vb);
+	m_Vao->SetIndexBuffer(Ib);
 
 	float quadVertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 	};
 
 	// Create vertex array
-	m_QuadVao.reset(Envii::VertexArray::Create());
+	m_SquareVao = Envii::VertexArray::Create();
 
 	// Create vertex buffer and layout
 	Envii::Ref<Envii::VertexBuffer> quadVb;
-	quadVb.reset(Envii::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
+	quadVb = Envii::VertexBuffer::Create(quadVertices, sizeof(quadVertices));
 	quadVb->SetLayout({
 		{ Envii::ShaderDataType::Float3, "a_Pos" },
-		});
+		{ Envii::ShaderDataType::Float2, "a_TexCoord" }
+	});
 
 	// Create index buffer
 	uint32_t quadIndices[] = { 0, 1, 2, 2, 3, 0 };
 	Envii::Ref<Envii::IndexBuffer> quadIb;
-	quadIb.reset(Envii::IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t)));
+	quadIb = Envii::IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
 
-	m_QuadVao->AddVertexBuffer(quadVb);
-	m_QuadVao->SetIndexBuffer(quadIb);
+	m_SquareVao->AddVertexBuffer(quadVb);
+	m_SquareVao->SetIndexBuffer(quadIb);
 
 	// Create camera
 	m_Camera.reset(new Envii::OrthoCamera(glm::ortho(-3.2f, 3.2f, -1.8f, 1.8f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 
 	// Create shaders
-	std::string vertSrc =
-		R"(#version 330 core
+	m_ShaderLib.Load("assets/shaders/Square.glsl");
+	m_ShaderLib.Load("assets/shaders/Quad.glsl");
 
-		layout (location = 0) in vec4 a_Pos;
-		layout (location = 1) in vec4 a_Color;
-
-		out vec4 v_Color;
-		uniform mat4 u_VP;
-		uniform mat4 u_Transform;
-
-		void main()
-		{
-			gl_Position = u_VP * u_Transform * a_Pos;
-			v_Color = a_Color;
-		})";
-
-	std::string fragSrc =
-		R"(#version 330 core
-
-		layout (location = 0) out vec4 color;
-		in vec4 v_Color;
-
-		void main()
-		{
-			color = v_Color;
-		})";
-
-	m_TriShader.reset(Envii::Shader::Create(vertSrc, fragSrc));
-	m_TriShader->Bind();
-
-	std::string quadVertSrc =
-		R"(#version 330 core
-
-		layout (location = 0) in vec3 a_Pos;
-		out vec3 v_pos;
-		uniform mat4 u_VP;
-		uniform mat4 u_Transform;
-
-		void main()
-		{
-			gl_Position = u_VP * u_Transform * vec4(a_Pos, 1.0);
-			v_pos = a_Pos;
-		})";
-
-	std::string quadFragSrc =
-		R"(#version 330 core
-
-		layout (location = 0) out vec4 color;
-		in vec3 v_pos;
-		void main()
-		{
-			color = vec4(v_pos * 0.5 + 0.5, 1.0);
-		})";
-
-	m_QuadShader.reset(Envii::Shader::Create(quadVertSrc, quadFragSrc));
-	m_QuadShader->Bind();
+	m_Tex = Envii::Texture2D::Create("assets/textures/Kreator.png", 0);
+	m_Tex->Bind(0);
+	m_SquareTex = Envii::Texture2D::Create("assets/textures/Checkerboard.png", 1);
+	m_SquareTex->Bind(1);
 }
 
 void TestLayer::OnUpdate(Envii::TimeStep ts)
 {
 	// Object positions
-	glm::mat4 triMat(glm::translate(glm::mat4(1.0), m_TriPos));
+	glm::mat4 Mat(glm::translate(glm::mat4(1.0), m_Pos));
 
 	// User Camera Translation
 	if (Envii::Input::IsKeyPressed(EV_KEY_LEFT))
@@ -155,18 +109,25 @@ void TestLayer::OnUpdate(Envii::TimeStep ts)
 	Envii::RenderCommand::Clear();
 
 	Envii::Renderer::BeginScene(*m_Camera);
-	glm::mat4 scale = glm::scale(glm::mat4(1.f), { 0.1f, 0.1f, 0.1f } );
+	glm::mat4 scale = glm::scale(glm::mat4(1.f), { 0.2f, 0.2f, 0.2f } );
+
+	Envii::Ref<Envii::Shader> squareShader = m_ShaderLib.Get("Square");
+	squareShader->Bind();
+	squareShader->SetUniform1i("u_TexSlot", 1);
 	for (int y = 0; y < 20; y++)
 	{
 		for (int x = 0; x < 20; x++)
 		{
-			glm::vec3 pos = { 0.1f * x, 0.1 * y, 0.0f };
+			glm::vec3 pos = { 0.205f * x, 0.205 * y, 0.0f };
 			glm::mat4 trans = glm::translate(glm::mat4(1.f), pos) * scale;
-			Envii::Renderer::Submit(m_QuadVao, m_QuadShader, trans);
+			Envii::Renderer::Submit(m_SquareVao, squareShader, trans);
 		}
 	}
 	
-	Envii::Renderer::Submit(m_TriVao, m_TriShader, triMat);
+	Envii::Ref<Envii::Shader> quadShader = m_ShaderLib.Get("Quad");
+	quadShader->Bind();
+	quadShader->SetUniform1i("u_TexSlot", 0);
+	Envii::Renderer::Submit(m_Vao, quadShader, Mat);
 
 	Envii::Renderer::EndScene();
 }
@@ -174,7 +135,7 @@ void TestLayer::OnUpdate(Envii::TimeStep ts)
 void TestLayer::OnImguiRender()
 {
 	ImGui::Begin("Sandbox Imgui Test");
-	ImGui::SliderFloat3("Tri Position:", glm::value_ptr(m_TriPos),-2.f, 2.f);
+	ImGui::SliderFloat3("Quad Position:", glm::value_ptr(m_Pos),-2.f, 2.f);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }

@@ -6,7 +6,7 @@
 
 namespace Envii
 {
-	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -17,7 +17,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLVertexBuffer(vertices, size);
+				return std::make_shared<OpenGLVertexBuffer>(vertices, size);
 			}
 		}
 
@@ -25,7 +25,7 @@ namespace Envii
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t size)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -36,7 +36,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLIndexBuffer(indices, size);
+				return std::make_shared<OpenGLIndexBuffer>(indices, size);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

@@ -15,8 +15,12 @@ namespace Envii
 		};
 
 	public:
+		virtual void Init() const = 0;
 		virtual void Clear() const = 0;
 		virtual void SetClearColor(const glm::vec4& color) const = 0;
+		virtual void SetBlendFunc(uint32_t srcFactor, uint32_t destFactor) const = 0;
+		virtual void SetBlendEnable(bool enable) const = 0;
+
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) const = 0;
 
 		inline static Api GetApi() { return s_Api; }

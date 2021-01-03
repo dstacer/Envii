@@ -5,7 +5,7 @@
 
 namespace Envii
 {
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetApi())
 		{
@@ -16,7 +16,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLVertexArray();
+				return std::make_shared<OpenGLVertexArray>();
 			}
 		}
 

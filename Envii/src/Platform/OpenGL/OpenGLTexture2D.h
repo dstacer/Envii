@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Render/Texture2D.h"
+#include "Render/Texture.h"
 
 namespace Envii
 {
@@ -9,11 +9,11 @@ namespace Envii
 	{
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height, void* data);
-		OpenGLTexture2D(const std::string& filepath);
+		OpenGLTexture2D(const std::string& filepath, uint32_t texSlot = 0);
 
 		~OpenGLTexture2D();
 
-		virtual void Bind(unsigned int texSlot = 0) const override;
+		virtual void Bind(uint32_t texSlot = 0) const override;
 		virtual void Unbind() const override;
 
 		virtual int GetWidth() const override { return m_Width; }
@@ -21,7 +21,7 @@ namespace Envii
 		virtual void SetData(void* data, uint32_t size) override;
 
 	private:
-		unsigned int m_RendererId;
+		uint32_t m_Id;
 		std::string m_Filepath;
 		unsigned char* m_Buffer;
 		int m_Width, m_Height, m_Channels;

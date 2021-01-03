@@ -4,7 +4,7 @@
 
 namespace Envii
 {
-	Texture2D* Texture2D::Create(uint32_t width, uint32_t height, void* data)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, void* data)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -15,14 +15,14 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLTexture2D(width, height, data);
+				return std::make_shared<OpenGLTexture2D>(width, height, data);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");
 		return nullptr; 
 	}
 
-	Texture2D* Texture2D::Create(const std::string& filepath)
+	Ref<Texture2D> Texture2D::Create(const std::string& filepath, uint32_t texSlot)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -33,7 +33,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return new OpenGLTexture2D(filepath);
+				return std::make_shared<OpenGLTexture2D>(filepath, texSlot);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");
