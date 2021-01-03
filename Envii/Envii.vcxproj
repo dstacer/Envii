@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\CameraController.h" />
     <ClInclude Include="src\Client\EntryPoint.h" />
     <ClInclude Include="src\Client\Envii.h" />
     <ClInclude Include="src\Core.h" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\CameraController.cpp" />
     <ClCompile Include="src\Imgui\ImguiBuild.cpp" />
     <ClCompile Include="src\Imgui\ImguiLayer.cpp" />
     <ClCompile Include="src\Layer.cpp" />

@@ -29,7 +29,7 @@ namespace Envii
         RenderCommand::Init();
     }
 
-    void Renderer::BeginScene(OrthoCamera& camera)
+    void Renderer::BeginScene(const OrthoCamera& camera)
     {
         s_SceneData->ViewProjMat = camera.GetViewProjection();
     }

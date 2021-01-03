@@ -18,7 +18,7 @@ private:
 	Envii::Ref<Envii::VertexArray> m_SquareVao;
 
 	Envii::ShaderLibrary m_ShaderLib;
-	Envii::Ref<Envii::OrthoCamera> m_Camera;
+	Envii::CameraController m_CamCtl;
 	Envii::Ref<Envii::Texture2D> m_Tex;
 	Envii::Ref<Envii::Texture2D> m_SquareTex;
 

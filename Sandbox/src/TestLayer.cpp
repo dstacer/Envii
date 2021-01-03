@@ -4,7 +4,10 @@
 #include "imgui.h"
 
 TestLayer::TestLayer()
-	: Envii::Layer("TestLayer"), m_Pos(glm::vec3(0.f)), m_SquarePos(glm::vec3(0.f))
+	: Envii::Layer("TestLayer"), 
+	  m_Pos(glm::vec3(0.f)), 
+	  m_SquarePos(glm::vec3(0.f)),
+	  m_CamCtl(1.778f)
 {
 	float vertices[] = {
 		-0.6f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -59,9 +62,6 @@ TestLayer::TestLayer()
 	m_SquareVao->AddVertexBuffer(quadVb);
 	m_SquareVao->SetIndexBuffer(quadIb);
 
-	// Create camera
-	m_Camera.reset(new Envii::OrthoCamera(glm::ortho(-3.2f, 3.2f, -1.8f, 1.8f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-
 	// Create shaders
 	m_ShaderLib.Load("assets/shaders/Square.glsl");
 	m_ShaderLib.Load("assets/shaders/Quad.glsl");
@@ -77,38 +77,12 @@ void TestLayer::OnUpdate(Envii::TimeStep ts)
 	// Object positions
 	glm::mat4 Mat(glm::translate(glm::mat4(1.0), m_Pos));
 
-	// User Camera Translation
-	if (Envii::Input::IsKeyPressed(EV_KEY_LEFT))
-	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + glm::vec3(-6.f * ts, 0.f, 0.f));
-	}
-	else if (Envii::Input::IsKeyPressed(EV_KEY_RIGHT))
-	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + glm::vec3(6.f * ts, 0.f, 0.f));
-	}
-	else if (Envii::Input::IsKeyPressed(EV_KEY_UP))
-	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + glm::vec3(0.f, 6.f * ts, 0.f));
-	}
-	else if (Envii::Input::IsKeyPressed(EV_KEY_DOWN))
-	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + glm::vec3(0.f, -6.f * ts, 0.f));
-	}
-
-	// User Camera Rotation
-	if (Envii::Input::IsKeyPressed(EV_KEY_D))
-	{
-		m_Camera->SetRotation(m_Camera->GetRotation() - 360.f * ts);
-	}
-	else if (Envii::Input::IsKeyPressed(EV_KEY_F))
-	{
-		m_Camera->SetRotation(m_Camera->GetRotation() + 360.f * ts);
-	}
+	m_CamCtl.OnUpdate(ts);
 	
 	Envii::RenderCommand::SetClearColor({ 0.4f, 0.4f, 0.4f, 1.0f });
 	Envii::RenderCommand::Clear();
 
-	Envii::Renderer::BeginScene(*m_Camera);
+	Envii::Renderer::BeginScene(m_CamCtl.GetCamera());
 	glm::mat4 scale = glm::scale(glm::mat4(1.f), { 0.2f, 0.2f, 0.2f } );
 
 	Envii::Ref<Envii::Shader> squareShader = m_ShaderLib.Get("Square");
@@ -142,6 +116,8 @@ void TestLayer::OnImguiRender()
 
 void TestLayer::OnEvent(Envii::Event& event) 
 {
+	m_CamCtl.OnEvent(event);
+
 	Envii::EventDispatcher dispatcher(event);
 	dispatcher.Dispatch<Envii::KeyPressEvent>(EV_BIND_EVENT_CB(TestLayer::OnKeyPressEvent));
 }

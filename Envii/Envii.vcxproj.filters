@@ -147,6 +147,7 @@
     <ClInclude Include="src\Render\Texture.h">
       <Filter>src\Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">
@@ -227,5 +228,6 @@
     <ClCompile Include="src\Render\Texture2D.cpp">
       <Filter>src\Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\CameraController.cpp" />
   </ItemGroup>
 </Project>

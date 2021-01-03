@@ -29,7 +29,7 @@ namespace Envii
 	{
 	public:
 		static void Init();
-		static void BeginScene(OrthoCamera& camera);
+		static void BeginScene(const OrthoCamera& camera);
 		static void EndScene();
 		static void Submit(const Ref<VertexArray>& vertexArray,
 						   const Ref<Shader>& shader,
