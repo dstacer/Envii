@@ -59,6 +59,7 @@ namespace Envii
 			// Update our main window
 			m_Window->OnUpdate();
 		}
+		Renderer::Shutdown();
 	}
 
 	void App::OnEvent(Event& event)

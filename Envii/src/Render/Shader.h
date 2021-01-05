@@ -26,14 +26,14 @@ namespace Envii
 		static Ref<Shader> Create(const std::string& filepath);
 		static Ref<Shader> Create(const std::string& name, const std::string& vertSrc, const std::string& fragSrc);
 
-		void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
-		void SetUniformMat3f(const std::string& name, const glm::mat3& matrix);
-		void SetUniform4f(const std::string& name, float f1, float f2, float f3, float f4);
-		void SetUniform3f(const std::string& name, float f1, float f2, float f3);
-		void SetUniform2f(const std::string& name, float f1, float f2);
-		void SetUniform1f(const std::string& name, float f1);
-		void SetUniform1i(const std::string& name, unsigned int val);
-		void SetUniform1iv(const std::string& name, unsigned int size, int* vals);
+		virtual void SetUniformMat4f(const std::string& name, const glm::mat4& matrix) = 0;
+		virtual void SetUniformMat3f(const std::string& name, const glm::mat3& matrix) = 0;
+		virtual void SetUniform4f(const std::string& name, float f1, float f2, float f3, float f4) = 0;
+		virtual void SetUniform3f(const std::string& name, float f1, float f2, float f3) = 0;
+		virtual void SetUniform2f(const std::string& name, float f1, float f2) = 0;
+		virtual void SetUniform1f(const std::string& name, float f1) = 0;
+		virtual void SetUniform1i(const std::string& name, unsigned int val) = 0;
+		virtual void SetUniform1iv(const std::string& name, unsigned int size, int* vals) = 0;
 	};
 
 	class ShaderLibrary

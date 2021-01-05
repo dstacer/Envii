@@ -1,7 +1,8 @@
 #include "evpch.h"
 
 #include <glad/glad.h>
-#include "Render/Renderer.h"
+#include "Renderer.h"
+#include "Renderer2D.h"
 #include "RenderCommand.h"
 
 namespace Envii
@@ -27,6 +28,13 @@ namespace Envii
     void Renderer::Init()
     {
         RenderCommand::Init();
+        Renderer2D::Init();
+    }
+
+    void Renderer::Shutdown()
+    {
+        delete s_SceneData;
+        Renderer2D::Shutdown();
     }
 
     void Renderer::BeginScene(const OrthoCamera& camera)

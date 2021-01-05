@@ -16,6 +16,7 @@
 
 // Render
 #include "../Render/Renderer.h"
+#include "../Render/Renderer2D.h"
 #include "../Render/RenderCommand.h"
 
 #include "../Render/VertexArray.h"

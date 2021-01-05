@@ -135,6 +135,9 @@
     <ClInclude Include="src\Render\Renderer.h">
       <Filter>src\Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Render\Renderer2D.h">
+      <Filter>src\Render</Filter>
+    </ClInclude>
     <ClInclude Include="src\Render\Shader.h">
       <Filter>src\Render</Filter>
     </ClInclude>
@@ -213,6 +216,9 @@
       <Filter>src\Render</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Renderer.cpp">
+      <Filter>src\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Renderer2D.cpp">
       <Filter>src\Render</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shader.cpp">

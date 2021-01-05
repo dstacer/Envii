@@ -2,12 +2,12 @@
 
 #include "EntryPoint.h"
 #include "Sandbox.h"
-#include "TestLayer.h"
+#include "Sandbox2DLayer.h"
 
 
 Sandbox::Sandbox()
 {
-	PushLayer(new TestLayer());
+	PushLayer(new Sandbox2DLayer());
 }
 
 Sandbox::~Sandbox()
