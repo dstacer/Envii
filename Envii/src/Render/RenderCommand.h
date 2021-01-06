@@ -22,6 +22,11 @@ namespace Envii
 			s_RenderApi->SetBlendEnable(enable);
 		}
 
+		inline static void SetDepthTestEnable(bool enable)
+		{
+			s_RenderApi->SetDepthTestEnable(enable);
+		}
+
 		inline static void SetViewport(uint32_t bottomX, uint32_t bottomY, uint32_t width, uint32_t height)
 		{
 			s_RenderApi->SetViewport(bottomX, bottomY, width, height);

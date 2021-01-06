@@ -6,13 +6,13 @@
 
 namespace Envii
 {
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, void* data)
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, uint32_t numChannels)
 		: m_Id(0),
 		m_Filepath(""),
 		m_Buffer(nullptr),
 		m_Width(width),
 		m_Height(height),
-		m_Channels(0)
+		m_Channels(numChannels)
 	{
 		GlApiCall(glGenTextures(1, &m_Id));
 		Bind();
@@ -22,7 +22,63 @@ namespace Envii
 		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
-		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+		uint32_t internalFormat = 0, dataFormat = 0;
+		switch (m_Channels)
+		{
+			case 3:
+			{
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+				break;
+			}
+			case 4:
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+				break;
+			}
+		}
+		EV_CORE_ASSERT(internalFormat && dataFormat, "Pixel data format not supported.");
+
+		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, nullptr));
+		Unbind();
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, uint32_t numChannels, void* data)
+		: m_Id(0),
+		m_Filepath(""),
+		m_Buffer(nullptr),
+		m_Width(width),
+		m_Height(height),
+		m_Channels(numChannels)
+	{
+		GlApiCall(glGenTextures(1, &m_Id));
+		Bind();
+
+		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+		GlApiCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		
+		uint32_t internalFormat = 0, dataFormat = 0;
+		switch (m_Channels)
+		{
+			case 3:
+			{
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+				break;
+			}
+			case 4:
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+				break;
+			}
+		}
+		EV_CORE_ASSERT(internalFormat && dataFormat, "Pixel data format not supported.");
+
+		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, data));
 		Unbind();
 	}
 
@@ -91,6 +147,8 @@ namespace Envii
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-
+		EV_CORE_ASSERT(size == m_Width * m_Height * m_Channels, "Buffer size doesn't match width, height, data format.");
+		Bind();
+		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
 	}
 }

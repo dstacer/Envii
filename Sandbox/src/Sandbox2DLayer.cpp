@@ -5,9 +5,10 @@
 
 Sandbox2DLayer::Sandbox2DLayer()
 	: Envii::Layer("Sandbox2DLayer"), 
-	  //m_Pos(0.f), 
-	  //m_SquarePos(0.f),
-	  m_CamCtl(1.778f)
+	  m_CamCtl(1.778f),
+	  m_Tex(Envii::Texture2D::Create("assets/textures/Kreator.png", 1))
+	  //m_SquareTex(Envii::Texture2D::Create("assets/textures/Checkerboard.png", 1)
+
 {
 	
 }
@@ -24,8 +25,6 @@ void Sandbox2DLayer::OnDetach()
 
 void Sandbox2DLayer::OnUpdate(Envii::TimeStep ts)
 {
-
-
 	m_CamCtl.OnUpdate(ts);
 	
 	Envii::RenderCommand::SetClearColor({ 0.4f, 0.4f, 0.4f, 1.0f });
@@ -33,8 +32,9 @@ void Sandbox2DLayer::OnUpdate(Envii::TimeStep ts)
 
 	Envii::Renderer2D::BeginScene(m_CamCtl.GetCamera());
 	
-	Envii::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
-	Envii::Renderer2D::DrawQuad({ -1.0f, 0.0f, 0.0f }, { 0.6f, 0.6f }, { 0.5f, 0.5f, 0.5f, 1.0f }, 0);
+	Envii::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 5.6f, 5.6f }, { 0.99f, 0.99f, 0.99f, 1.0f });
+	Envii::Renderer2D::DrawQuad({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.99f, 0.99f, 0.99f, 1.0f }, m_Tex, 1);
+	Envii::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.99f, 0.99f, 0.99f, 1.0f }, m_Tex, 1);
 
 	Envii::Renderer2D::EndScene();
 }

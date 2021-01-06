@@ -16,12 +16,11 @@ namespace Envii
 		RenderData()
 			: m_ShaderLib() {}
 		
-		Envii::Ref<Envii::VertexArray> m_Vao;
-		Envii::Ref<Envii::VertexArray> m_SquareVao;
+		Ref<VertexArray> m_Vao;
+		Ref<VertexArray> m_SquareVao;
+		Ref<Texture2D> m_WhiteTex;
 
-		Envii::ShaderLibrary m_ShaderLib;
-		Envii::Ref<Envii::Texture2D> m_Tex;
-		Envii::Ref<Envii::Texture2D> m_SquareTex;
+		ShaderLibrary m_ShaderLib;
 
 		glm::vec3 m_Pos = { 0.0f, 0.0f, 0.0f }, m_SquarePos = { 0.0f, 0.0f, 0.0f };
 		glm::mat4 m_ViewProj = glm::mat4(1.0f);
@@ -32,10 +31,10 @@ namespace Envii
     {
 		s_Data = new RenderData();
 		float vertices[] = {
-		-0.6f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		 0.6f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-		 0.6f,  0.25f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-		-0.6f,  0.25f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
+			-0.6f, -0.25f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+			 0.6f, -0.25f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+			 0.6f,  0.25f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.6f,  0.25f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 
 		// Create vertex array
@@ -48,7 +47,7 @@ namespace Envii
 			{ ShaderDataType::Float3, "a_Pos" },
 			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCoord" }
-			});
+		});
 
 		// Create index buffer
 		uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
@@ -59,10 +58,10 @@ namespace Envii
 		s_Data->m_Vao->SetIndexBuffer(Ib);
 
 		float quadVertices[] = {
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 
 		// Create vertex array
@@ -73,8 +72,9 @@ namespace Envii
 		quadVb = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
 		quadVb->SetLayout({
 			{ ShaderDataType::Float3, "a_Pos" },
+			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCoord" }
-			});
+		});
 
 		// Create index buffer
 		uint32_t quadIndices[] = { 0, 1, 2, 2, 3, 0 };
@@ -85,13 +85,15 @@ namespace Envii
 		s_Data->m_SquareVao->SetIndexBuffer(quadIb);
 
 		// Create shaders
-		s_Data->m_ShaderLib.Load("assets/shaders/Square.glsl");
-		s_Data->m_ShaderLib.Load("assets/shaders/Quad.glsl");
+		s_Data->m_ShaderLib.Load("assets/shaders/VFTexColor.glsl");
+		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
+		texShader->Bind();
 
-		s_Data->m_Tex = Texture2D::Create("assets/textures/Kreator.png", 0);
-		s_Data->m_Tex->Bind(0);
-		s_Data->m_SquareTex = Texture2D::Create("assets/textures/Checkerboard.png", 1);
-		s_Data->m_SquareTex->Bind(1);
+		// Create default (white) 1x1 texture
+		s_Data->m_WhiteTex = Texture2D::Create(1, 1, 3);
+		unsigned char pixel[3] = { 0xff, 0xff, 0xff };
+		s_Data->m_WhiteTex->SetData(pixel, sizeof(pixel));
+		s_Data->m_WhiteTex->Bind(0);
     }
 
     void Renderer2D::Shutdown()
@@ -109,17 +111,31 @@ namespace Envii
 
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float texId)
+    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const Ref<Texture>& texture, uint32_t texId)
     {
-		Ref<Shader> squareShader = s_Data->m_ShaderLib.Get("Square");
-		squareShader->Bind();
-        squareShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
+		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
+		texture->Bind(texId);
+        texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
 		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
-		squareShader->SetUniformMat4f("u_Transform", transform);
-		squareShader->SetUniform1i("u_TexSlot", 1);
-		s_Data->m_SquareVao->Bind();
-        RenderCommand::DrawIndexed(s_Data->m_SquareVao);
+		texShader->SetUniformMat4f("u_Transform", transform);
+		texShader->SetUniform1i("u_TexSlot", texId);
+		texShader->SetUniform4f("u_Color", color.r, color.g, color.b, color.a);
+		s_Data->m_Vao->Bind();
+        RenderCommand::DrawIndexed(s_Data->m_Vao);
     }
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor"); 
+		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
+		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+		texShader->SetUniformMat4f("u_Transform", transform);
+		// Default (white) texture is already bound at slot 0
+		texShader->SetUniform1i("u_TexSlot", 0);
+		texShader->SetUniform4f("u_Color", color.r, color.g, color.b, color.a);
+		s_Data->m_SquareVao->Bind();
+		RenderCommand::DrawIndexed(s_Data->m_SquareVao);
+	}
 
     
 }

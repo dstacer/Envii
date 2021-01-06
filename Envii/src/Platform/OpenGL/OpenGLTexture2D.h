@@ -8,7 +8,8 @@ namespace Envii
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(uint32_t width, uint32_t height, void* data);
+		OpenGLTexture2D(uint32_t width, uint32_t height, uint32_t numChannels); 
+		OpenGLTexture2D(uint32_t width, uint32_t height, uint32_t numChannels, void* data);
 		OpenGLTexture2D(const std::string& filepath, uint32_t texSlot = 0);
 
 		~OpenGLTexture2D();

@@ -4,7 +4,25 @@
 
 namespace Envii
 {
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, void* data)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t numChannels)
+	{
+		switch (Renderer::GetApi())
+		{
+		case RenderApi::Api::NONE:
+		{
+			EV_CORE_ASSERT(false, "Envii doesn't currently support headless config.");
+			return nullptr;
+		}
+		case RenderApi::Api::OPENGL:
+		{
+			return std::make_shared<OpenGLTexture2D>(width, height, numChannels);
+		}
+		}
+		EV_CORE_ASSERT(false, "Unknown Renderer API.");
+		return nullptr;
+	}
+
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, uint32_t numChannels, void* data)
 	{
 		switch (Renderer::GetApi())
 		{
@@ -15,7 +33,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLTexture2D>(width, height, data);
+				return std::make_shared<OpenGLTexture2D>(width, height, numChannels, data);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

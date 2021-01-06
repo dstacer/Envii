@@ -21,7 +21,8 @@ namespace Envii
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height, void* data);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t numChannels);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, uint32_t numChannels, void* data);
 		static Ref<Texture2D> Create(const std::string& filepath, uint32_t texSlot = 0);
 	};
 

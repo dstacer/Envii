@@ -10,6 +10,7 @@ namespace Envii
 	{
 		SetBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		SetBlendEnable(true);
+		SetDepthTestEnable(true);
 	}
 	
 	void OpenGLRenderApi::Clear() const
@@ -36,6 +37,18 @@ namespace Envii
 		else
 		{
 			GlApiCall(glEnable(GL_BLEND));
+		}
+	}
+
+	void OpenGLRenderApi::SetDepthTestEnable(bool enable) const
+	{
+		if (!enable)
+		{
+			GlApiCall(glDisable(GL_DEPTH_TEST));
+		}
+		else
+		{
+			GlApiCall(glEnable(GL_DEPTH_TEST));
 		}
 	}
 
