@@ -153,6 +153,7 @@
     <ClInclude Include="thirdparty\stb_image\stb_image.h">
       <Filter>thirdparty\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\App.cpp">
