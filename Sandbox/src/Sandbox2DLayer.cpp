@@ -12,19 +12,24 @@ Sandbox2DLayer::Sandbox2DLayer()
 	
 }
 
-void Sandbox2DLayer::OnAttach()
+Sandbox2DLayer::~Sandbox2DLayer()
 {
 	
 }
 
+void Sandbox2DLayer::OnAttach()
+{
+
+}
+
 void Sandbox2DLayer::OnDetach()
 {
-	Envii::Renderer2D::Shutdown();
+	
 }
 
 void Sandbox2DLayer::OnUpdate(Envii::TimeStep ts)
 {
-	PROFILE_SCOPE("SandboxLayer::OnUpdate()", m_ProfileResults);
+	EV_PROFILE_FUNCTION();
 
 	m_CamCtl.OnUpdate(ts);
 	
@@ -33,25 +38,17 @@ void Sandbox2DLayer::OnUpdate(Envii::TimeStep ts)
 
 	Envii::Renderer2D::BeginScene(m_CamCtl.GetCamera());
 	
-	Envii::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 5.6f, 5.6f }, { 0.99f, 0.99f, 0.99f, 1.0f });
-	Envii::Renderer2D::DrawQuad({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.99f, 0.99f, 0.99f, 1.0f }, m_Tex, 1);
-	Envii::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.99f, 0.99f, 0.99f, 1.0f }, m_Tex, 1);
+	Envii::Renderer2D::DrawQuad({ -2.0f, -2.0f, -0.2f }, { 12.0f, 5.0f }, { 0.1f, 0.2f, 0.8f, 1.0f });
+	Envii::Renderer2D::DrawQuad({ 2.0f, -4.0f, 0.0f }, { 6.0f, 2.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, m_Tex, 2.0f, 1);
+	//Envii::Renderer2D::DrawQuadRotate({ -2.0f, 4.0f, -0.1f }, { 3.0f, 1.25f }, { 0.25f, 0.2f, 0.8f, 1.0f }, 45.0f);
+	//Envii::Renderer2D::DrawQuadRotate({ 2.0f, 4.0f, 0.0f }, { 3.0f, 1.25f }, { 1.0f, 1.0f, 1.0f, 1.0f }, m_Tex, 0.0f, 1.0f, 1);
 
 	Envii::Renderer2D::EndScene();
 }
 
 void Sandbox2DLayer::OnImguiRender()
 {
-	PROFILE_SCOPE("Sandbox::OnImguiRender()", m_ProfileResults);
-	for (auto& result : m_ProfileResults)
-	{
-		char label[50];
-		strcpy_s(label, result.Name);
-		strcat_s(label, "  %.3f ms");
-		ImGui::Text(label, result.Time);
-	}
 
-	m_ProfileResults.clear();
 }
 
 void Sandbox2DLayer::OnEvent(Envii::Event& event)

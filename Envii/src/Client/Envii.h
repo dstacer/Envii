@@ -5,7 +5,7 @@
 #include "../Core/Layer.h"
 #include "../Core/Log.h"
 #include "../Core/Timestep.h"
-#include "../Core/Timer.h"
+#include "../Core/Profiler.h"
 
 // Input
 #include "../Core/Input.h"

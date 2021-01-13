@@ -4,10 +4,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Log.h"
 #include "App.h"
-#include "Core.h"
 #include "Input.h"
+#include "Timestep.h"
+#include "Profiler.h"
 #include "Render/Renderer.h"
-#include "Core/Timestep.h"
+
 // Temporary - needs to be platform-independent
 #include <GLFW/glfw3.h>
 
@@ -37,8 +38,10 @@ namespace Envii
 	
 	void App::Run()
 	{
+		EV_PROFILE_BEGIN_SESSION("EnviiApp"); 
 		while (m_Running)
 		{
+			EV_PROFILE_SCOPE("App Run");
 			float time = (float)glfwGetTime();
 			TimeStep elapsedTime(time - m_LastFrameTime);
 			m_LastFrameTime = time;
@@ -59,6 +62,7 @@ namespace Envii
 			// Update our main window
 			m_Window->OnUpdate();
 		}
+		EV_PROFILE_END_SESSION();
 		Renderer::Shutdown();
 	}
 

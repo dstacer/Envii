@@ -1,14 +1,10 @@
 #pragma once
 
 #include "LayerStack.h"
-#include "Core.h"
+//#include "Core.h"
 #include "Window.h"
 #include "../Events/AppEvent.h"
 #include "../Imgui/ImguiLayer.h"
-#include "../Render/VertexArray.h"
-#include "../Render/Buffer.h"
-#include "../Render/Shader.h"
-#include "../Render/OrthoCamera.h"
 
 namespace Envii
 {

@@ -7,6 +7,14 @@ namespace Envii
 {
 	
 	/***************************** VERTEX BUFFER **************************/
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+		: m_Id(0)
+	{
+		GlApiCall(glGenBuffers(1, &m_Id));
+		GlApiCall(glBindBuffer(GL_ARRAY_BUFFER, m_Id));
+		GlApiCall(glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW));
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 		: m_Id(0)
 	{
@@ -14,6 +22,7 @@ namespace Envii
 		GlApiCall(glBindBuffer(GL_ARRAY_BUFFER, m_Id));
 		GlApiCall(glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW));
 	}
+
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
@@ -28,6 +37,12 @@ namespace Envii
 	void OpenGLVertexBuffer::Unbind() const
 	{
 		GlApiCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	}
+
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t sizeInBytes)
+	{
+		GlApiCall(glBindBuffer(GL_ARRAY_BUFFER, m_Id)); 
+		GlApiCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeInBytes, data));
 	}
 
 	/***************************** INDEX BUFFER **************************/

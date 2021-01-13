@@ -6,6 +6,7 @@ class Sandbox2DLayer : public Envii::Layer
 {
 public:
 	Sandbox2DLayer();
+	~Sandbox2DLayer();
 
 	void OnAttach() override;
 	void OnDetach() override;
@@ -19,6 +20,4 @@ private:
 	Envii::CameraController m_CamCtl;
 	Envii::Ref<Envii::Texture2D> m_Tex;
 	Envii::Ref<Envii::Texture2D> m_SquareTex;
-
-	std::vector<Envii::ProfileResult> m_ProfileResults;
 };

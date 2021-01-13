@@ -145,6 +145,11 @@ namespace Envii
 		GlApiCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
 
+	uint32_t OpenGLTexture2D::GetId() const
+	{
+		return m_Id;
+	}
+
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
 		EV_CORE_ASSERT(size == m_Width * m_Height * m_Channels, "Buffer size doesn't match width, height, data format.");

@@ -16,6 +16,7 @@
 #include <unordered_set>
 
 #include "Core/Log.h"
+#include "Core/Profiler.h"
 
 
 #ifdef EV_PLATFORM_WINDOWS

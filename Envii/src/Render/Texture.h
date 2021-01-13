@@ -12,10 +12,11 @@ namespace Envii
 
 		virtual void Bind(uint32_t texSlot = 0) const = 0;
 		virtual void Unbind() const = 0;
-
+		virtual uint32_t GetId() const = 0;
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
 		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual bool operator==(const Texture& compareTo) const = 0;
 	};
 
 	class Texture2D : public Texture

@@ -32,9 +32,9 @@ namespace Envii
 			s_RenderApi->SetViewport(bottomX, bottomY, width, height);
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
+		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
 		{
-			s_RenderApi->DrawIndexed(vertexArray);
+			s_RenderApi->DrawIndexed(vertexArray, count);
 		}
 
 	private:

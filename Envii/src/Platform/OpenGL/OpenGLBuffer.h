@@ -9,6 +9,7 @@ namespace Envii
 	{
 	public:
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(uint32_t size);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
@@ -22,6 +23,8 @@ namespace Envii
 		{
 			m_Layout = layout;
 		}
+
+		virtual void SetData(const void* data, uint32_t sizeInBytes) override;
 
 	private:
 		uint32_t m_Id;

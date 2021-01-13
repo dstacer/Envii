@@ -90,6 +90,11 @@ namespace Envii
 		GlApiCall(glBindTexture(GL_TEXTURE_2D_ARRAY, 0));
 	}
 
+	uint32_t OpenGLTexture2DArray::GetId() const
+	{
+		return m_Id;
+	}
+
 	void OpenGLTexture2DArray::SetData(void* data, uint32_t size)
 	{
 
