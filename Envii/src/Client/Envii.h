@@ -24,5 +24,6 @@
 #include "../Render/Buffer.h"
 #include "../Render/Shader.h"
 #include "../Render/Texture.h"
+#include "../Render/SubTexture2D.h"
 
 #include "../Render/CameraController.h"

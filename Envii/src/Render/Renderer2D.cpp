@@ -6,7 +6,7 @@
 #include "Shader.h"
 #include "CameraController.h"
 #include "RenderCommand.h"
-#include "Render/Renderer2D.h"
+#include "Renderer2D.h"
 #include "Texture.h"
 
 namespace Envii
@@ -17,23 +17,31 @@ namespace Envii
 		glm::vec4 Color;
 		glm::vec2 TexCoords;
 		float TexSlot;
+		float TexCoordScale;
 	}; 
 
 	struct RenderData
 	{
+		RenderData()
+			: m_ShaderLib() {}
+		
 		const size_t MAX_QUADS = 10000;
 		const size_t MAX_VERTS = (4 * MAX_QUADS);
 		const size_t MAX_INDICES = (6 * MAX_QUADS);
 		static const size_t MAX_TEXTURES = 32; // TODO: Get max from renderer caps
+		
 		std::array<Ref<Texture>, MAX_TEXTURES> textures;
 		uint32_t currTexSlot = 1; // 0 will be white texture
 		
 		uint32_t quadIndexCount = 0;
 		QuadVertex* quadBufferStart = nullptr;
 		QuadVertex* quadBufferPtr = nullptr;
-		
-		RenderData()
-			: m_ShaderLib() {}
+		glm::vec4 quadVertexLocs[4] = {
+			{-0.5f, -0.5f, 0.0f, 1.0f },
+			{ 0.5f, -0.5f, 0.0f, 1.0f },
+			{ 0.5f,  0.5f, 0.0f, 1.0f },
+			{-0.5f,  0.5f, 0.0f, 1.0f }
+		};
 		
 		Ref<VertexArray> m_QuadVao;
 		Ref<VertexBuffer> m_QuadVbo;
@@ -41,8 +49,9 @@ namespace Envii
 
 		ShaderLibrary m_ShaderLib;
 
-		glm::vec3 m_Pos = { 0.0f, 0.0f, 0.0f }, m_SquarePos = { 0.0f, 0.0f, 0.0f };
 		glm::mat4 m_ViewProj = glm::mat4(1.0f);
+
+		Renderer2D::RenderStats Stats;
 	};
 
 	static RenderData* s_Data;
@@ -59,7 +68,8 @@ namespace Envii
 			{ ShaderDataType::Float3, "a_Pos" },
 			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Float, "a_TexSlot" }
+			{ ShaderDataType::Float, "a_TexSlot" },
+			{ ShaderDataType::Float, "a_TexCoordScale" }
 		});
 
 		s_Data->quadBufferStart = new QuadVertex[s_Data->MAX_VERTS];
@@ -119,6 +129,8 @@ namespace Envii
 			s_Data->textures[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_Data->m_QuadVao, s_Data->quadIndexCount);
+
+		s_Data->Stats.DrawCalls++;
 	}
 
     void Renderer2D::EndScene()
@@ -128,10 +140,26 @@ namespace Envii
 		Flush();
     }
 
+	void Renderer2D::StartNewBatch()
+	{
+		EndScene();
+		s_Data->quadBufferPtr = s_Data->quadBufferStart;
+		s_Data->quadIndexCount = 0;
+		s_Data->currTexSlot = 1;
+	}
+
     void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const Ref<Texture>& texture, float texCoordScale, uint32_t texId)
     {
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch();
+
+		constexpr uint32_t quadVertCount = 4;
+		constexpr glm::vec2 texCoords[quadVertCount] = {
+			{0.f, 0.f}, {1.f, 0.f}, {1.f, 1.f}, {0.f, 1.f}
+		};
+
 		float texSlot = 0.0f;
-		for (uint32_t i = 1; i < s_Data->currTexSlot; i++)
+		for (uint32_t i = 0; i < s_Data->currTexSlot; i++)
 		{
 			if (*(s_Data->textures[i].get()) == *(texture.get()))
 			{
@@ -147,92 +175,135 @@ namespace Envii
 			s_Data->currTexSlot++;
 		}
 
-		s_Data->quadBufferPtr->Position = position;
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+							  glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = texCoordScale;
+			s_Data->quadBufferPtr++;
+		}
 		
 		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
 		texture->Bind(texId);
         texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0), position);
-		texShader->SetUniformMat4f("u_Transform", glm::mat4(1.0f));// transform);
 
 		int samplers[s_Data->MAX_TEXTURES];
 		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
 			samplers[i] = i;
 			
 		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
-		texShader->SetUniform1f("u_TexCoordScale", texCoordScale);
 
 		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
     }
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const Ref<SubTexture2D>& subtex, float texCoordScale, uint32_t texId)
+	{
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch();
+
+		constexpr uint32_t quadVertCount = 4;
+		const glm::vec2* texCoords = subtex->GetTexCoords();
+		const Ref<Texture2D>& texture = subtex->GetTexture();
+		const glm::vec2 sizeInTiles = subtex->GetSizeInTiles();
+
+		float texSlot = 0.0f;
+		for (uint32_t i = 0; i < s_Data->currTexSlot; i++)
+		{
+			if (*(s_Data->textures[i].get()) == *(texture.get()))
+			{
+				texSlot = (float)i;
+				break;
+			}
+		}
+
+		if (texSlot == 0.0f)
+		{
+			texSlot = (float)s_Data->currTexSlot;
+			s_Data->textures[s_Data->currTexSlot] = texture;
+			s_Data->currTexSlot++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(sizeInTiles.x * size.x, sizeInTiles.y * size.y, 1.0f));
+
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = texCoordScale;
+			s_Data->quadBufferPtr++;
+		}
+
+		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
+		texture->Bind(texId);
+		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
+
+		int samplers[s_Data->MAX_TEXTURES];
+		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
+			samplers[i] = i;
+
+		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
+
+		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
+	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch();
+
+		constexpr uint32_t quadVertCount = 4;
+		constexpr glm::vec2 texCoords[quadVertCount] = {
+			{0.f, 0.f}, {1.f, 0.f}, {1.f, 1.f}, {0.f, 1.f}
+		};
+
 		const float texSlot = 0.0f; // White texture
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+							  glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		
-		s_Data->quadBufferPtr->Position = position;
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = 1.0f;
+			s_Data->quadBufferPtr++;
+		}
 
 		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor"); 
 		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0), position);
-		texShader->SetUniformMat4f("u_Transform", glm::mat4(1.0f));// transform);
+		
 		// Default (white) texture is already bound at slot 0
 		int samplers[s_Data->MAX_TEXTURES];
 		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
 			samplers[i] = i;
 
 		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
-		texShader->SetUniform1f("u_TexCoordScale", 1.0f);
 
 		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
 	}
-
 
 	void Renderer2D::DrawQuadRotate(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const Ref<Texture>& texture, float rotation, float texCoordScale, uint32_t texId)
 	{
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch(); 
+
+		constexpr uint32_t quadVertCount = 4;
+		constexpr glm::vec2 texCoords[quadVertCount] = {
+			{0.f, 0.f}, {1.f, 0.f}, {1.f, 1.f}, {0.f, 1.f}
+		};
+		
 		float texSlot = 0.0f;
 		for (uint32_t i = 1; i < s_Data->currTexSlot; i++)
 		{
@@ -250,89 +321,136 @@ namespace Envii
 			s_Data->currTexSlot++;
 		}
 		
-		s_Data->quadBufferPtr->Position = position;
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+							  glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+							  glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = texCoordScale;
+			s_Data->quadBufferPtr++;
+		}
 		
 		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
 		texture->Bind(texId);
 		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * 
-			//glm::rotate(glm::mat4(1.0), glm::radians(rotation), { 0.0f, 0.0f, 1.0f });
-
-		texShader->SetUniformMat4f("u_Transform", glm::mat4(1.0f));// transform);
+		
 		int samplers[s_Data->MAX_TEXTURES];
 		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
 			samplers[i] = i;
 
 		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
-		texShader->SetUniform1f("u_TexCoordScale", texCoordScale);
 
 		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawQuadRotate(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const Ref<SubTexture2D>& subtex, float rotation, float texCoordScale, uint32_t texId)
+	{
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch();
+
+		constexpr uint32_t quadVertCount = 4;
+		const glm::vec2* texCoords = subtex->GetTexCoords();
+		const Ref<Texture2D>& texture = subtex->GetTexture();
+		const glm::vec2 sizeInTiles = subtex->GetSizeInTiles();
+
+		float texSlot = 0.0f;
+		for (uint32_t i = 1; i < s_Data->currTexSlot; i++)
+		{
+			if (*(s_Data->textures[i].get()) == *(texture.get()))
+			{
+				texSlot = (float)i;
+				break;
+			}
+		}
+
+		if (texSlot == 0.0f)
+		{
+			texSlot = (float)s_Data->currTexSlot;
+			s_Data->textures[s_Data->currTexSlot] = texture;
+			s_Data->currTexSlot++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+			glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(sizeInTiles.x * size.x, sizeInTiles.y * size.y, 1.0f));
+
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = texCoordScale;
+			s_Data->quadBufferPtr++;
+		}
+
+		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
+		texture->Bind(texId);
+		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
+
+		int samplers[s_Data->MAX_TEXTURES];
+		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
+			samplers[i] = i;
+
+		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
+
+		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuadRotate(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation)
 	{
+		if (s_Data->quadIndexCount >= s_Data->MAX_INDICES)
+			StartNewBatch();
+
+		constexpr uint32_t quadVertCount = 4;
+		constexpr glm::vec2 texCoords[quadVertCount] = {
+			{0.f, 0.f}, {1.f, 0.f}, {1.f, 1.f}, {0.f, 1.f}
+		};
+
 		const float texSlot = 0.0f;
-		
-		s_Data->quadBufferPtr->Position = position;
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+							  glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+							  glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x + size.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
-
-		s_Data->quadBufferPtr->Position = { position.x, position.y + size.y, position.z };
-		s_Data->quadBufferPtr->Color = color;
-		s_Data->quadBufferPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data->quadBufferPtr->TexSlot = texSlot;
-		s_Data->quadBufferPtr++;
+		for (uint32_t i = 0; i < quadVertCount; i++)
+		{
+			s_Data->quadBufferPtr->Position = transform * s_Data->quadVertexLocs[i];
+			s_Data->quadBufferPtr->Color = color;
+			s_Data->quadBufferPtr->TexCoords = texCoords[i];
+			s_Data->quadBufferPtr->TexSlot = texSlot;
+			s_Data->quadBufferPtr->TexCoordScale = 1.0f;
+			s_Data->quadBufferPtr++;
+		}
 		
 		Ref<Shader> texShader = s_Data->m_ShaderLib.Get("VFTexColor");
 		texShader->SetUniformMat4f("u_VP", s_Data->m_ViewProj);
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * 
-			//glm::rotate(glm::mat4(1.0), glm::radians(rotation), { 0.0f, 0.0f, 1.0f });
-
-		texShader->SetUniformMat4f("u_Transform", glm::mat4(1.0f));// transform);
+		
 		// Default (white) texture is already bound at slot 0
 		int samplers[s_Data->MAX_TEXTURES];
 		for (uint32_t i = 0; i < s_Data->MAX_TEXTURES; i++)
 			samplers[i] = i;
 
 		texShader->SetUniform1iv("u_TexSlot", s_Data->MAX_TEXTURES, samplers);
-		texShader->SetUniform1f("u_TexCoordScale", 1.0f);
 
 		s_Data->quadIndexCount += 6;
+		s_Data->Stats.QuadCount++;
 	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_Data->Stats, 0, sizeof(Renderer2D::RenderStats));
+	}
+
+	const Renderer2D::RenderStats& Renderer2D::GetStats()
+	{
+		return s_Data->Stats;
+	}
+	
 }

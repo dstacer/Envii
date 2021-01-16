@@ -20,4 +20,7 @@ private:
 	Envii::CameraController m_CamCtl;
 	Envii::Ref<Envii::Texture2D> m_Tex;
 	Envii::Ref<Envii::Texture2D> m_SquareTex;
+	Envii::Ref<Envii::Texture2D> m_SpriteSheet;
+	Envii::Ref<Envii::SubTexture2D> m_StairsTex;
+
 };
