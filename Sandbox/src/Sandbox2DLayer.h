@@ -2,6 +2,21 @@
 
 #include "Envii.h"
 
+enum class PondTile
+{
+	Grass = 0,
+	ShoreBl,
+	ShoreBm,
+	ShoreBr,
+	ShoreMr,
+	ShoreTr,
+	ShoreTm,
+	ShoreTl,
+	ShoreMl,
+	ShoreC,
+	NumTiles
+};
+
 class Sandbox2DLayer : public Envii::Layer
 {
 public:
@@ -21,6 +36,8 @@ private:
 	Envii::Ref<Envii::Texture2D> m_Tex;
 	Envii::Ref<Envii::Texture2D> m_SquareTex;
 	Envii::Ref<Envii::Texture2D> m_SpriteSheet;
-	Envii::Ref<Envii::SubTexture2D> m_StairsTex;
+	Envii::Ref<Envii::SubTexture2D> m_TreeTex;
+	std::unordered_map<char, Envii::Ref<Envii::SubTexture2D>> m_TexMap;
+	uint32_t m_MapWidth = 0, m_MapHeight = 0;
 
 };

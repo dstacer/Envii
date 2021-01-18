@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "LayerStack.h"
 //#include "Core.h"
 #include "Window.h"
@@ -11,10 +12,11 @@ namespace Envii
 	class App
 	{
 	public:	
-		App();
+		App(const std::string& name);
 		virtual ~App();
 
 		void Run();
+		void Close();
 		void OnEvent(Event& event);
 		
 		void PushLayer(Layer* layer);

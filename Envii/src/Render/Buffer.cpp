@@ -10,15 +10,15 @@ namespace Envii
 	{
 		switch (Renderer::GetApi())
 		{
-		case RenderApi::Api::NONE:
-		{
-			EV_CORE_ASSERT(false, "Envii doesn't currently support headless config.");
-			return nullptr;
-		}
-		case RenderApi::Api::OPENGL:
-		{
-			return std::make_shared<OpenGLVertexBuffer>(size);
-		}
+			case RenderApi::Api::NONE:
+			{
+				EV_CORE_ASSERT(false, "Envii doesn't currently support headless config.");
+				return nullptr;
+			}
+			case RenderApi::Api::OPENGL:
+			{
+				return std::make_shared<OpenGLVertexBuffer>(size);
+			}
 		}
 
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

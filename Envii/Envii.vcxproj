@@ -160,6 +160,7 @@
     <ClInclude Include="src\Imgui\ImguiLayer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderApi.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture2D.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Render\Buffer.h" />
     <ClInclude Include="src\Render\CameraController.h" />
+    <ClInclude Include="src\Render\FrameBuffer.h" />
     <ClInclude Include="src\Render\GraphicsContext.h" />
     <ClInclude Include="src\Render\OrthoCamera.h" />
     <ClInclude Include="src\Render\RenderAPI.h" />
@@ -191,6 +193,7 @@
     <ClCompile Include="src\Imgui\ImguiLayer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderApi.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture2D.cpp" />
@@ -200,6 +203,7 @@
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Render\Buffer.cpp" />
     <ClCompile Include="src\Render\CameraController.cpp" />
+    <ClCompile Include="src\Render\FrameBuffer.cpp" />
     <ClCompile Include="src\Render\OrthoCamera.cpp" />
     <ClCompile Include="src\Render\RenderAPI.cpp" />
     <ClCompile Include="src\Render\RenderCommand.cpp" />

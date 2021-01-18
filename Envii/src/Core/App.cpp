@@ -15,13 +15,13 @@
 namespace Envii
 {	
 	App* App::s_Instance = nullptr;
-	App::App()
+	App::App(const std::string& name)
 	{
 		EV_CORE_ASSERT(!s_Instance, "App already exists.");
 		s_Instance = this;
 
 		// Make our window (single window for now)
-		m_Window =  Scoped<Window>(Window::Create());
+		m_Window =  Scoped<Window>(Window::Create(WindowProps(name)));
 		m_Window->SetEventCallback(EV_BIND_EVENT_CB(App::OnEvent));
 
 		// Init Renderer - currently just sets blending options
@@ -64,6 +64,11 @@ namespace Envii
 		}
 		EV_PROFILE_END_SESSION();
 		Renderer::Shutdown();
+	}
+
+	void App::Close()
+	{
+		m_Running = false;
 	}
 
 	void App::OnEvent(Event& event)

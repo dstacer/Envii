@@ -6,6 +6,7 @@
 
 
 Sandbox::Sandbox()
+	: Envii::App("Sandbox")
 {
 	PushLayer(new Sandbox2DLayer());
 }

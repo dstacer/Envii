@@ -16,6 +16,10 @@ namespace Envii
 		void OnUpdate(TimeStep ts);
 		void OnEvent(Event& e);
 		const OrthoCamera& GetCamera() const;
+		void SetVerticalExtent(float screenHalfHeight) { 
+			m_VerticalExtent = screenHalfHeight; 
+			m_Camera.SetProjection(m_AspectRatio, screenHalfHeight);
+		}
 
 	private:
 		bool OnMouseScroll(MouseScrollEvent e);

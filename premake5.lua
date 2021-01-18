@@ -2,7 +2,7 @@
 workspace "Envii"
    architecture "x86_64" 
    configurations { "Debug", "Release", "Dist" }
-   startproject "Sandbox"
+   startproject "SceneEditor"
 
 -- Output directory for binaries and intermediates
 outputdir = "%{cfg.buildcfg}/%{cfg.architecture}/"
@@ -96,6 +96,45 @@ project "Envii"
 
 project "Sandbox"
    location "Sandbox"
+   kind "ConsoleApp"
+   language "C++"
+   cppdialect "C++17"
+   staticruntime "on"
+   targetdir ("bin/" .. outputdir .. "%{prj.name}")
+   objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
+
+   files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
+
+   includedirs 
+   { "%{wks.location}/Envii/src/Client",
+     "%{wks.location}/Envii/thirdparty/spdlog/include", 
+     "%{wks.location}/Envii/thirdparty/glm", 
+     "%{wks.location}/Envii/thirdparty/imgui" 
+   }
+   
+   links "Envii" 
+   
+   filter "system:windows"
+      systemversion "latest"
+      defines "EV_PLATFORM_WINDOWS"
+
+   filter "configurations:Debug"
+      defines { "EV_DEBUG", "_DEBUG" }
+      runtime "Debug"
+      symbols "on"
+
+   filter "configurations:Release"
+      defines { "EV_RELEASE", "NDEBUG" }
+      runtime "Release"
+      optimize "on"
+
+   filter "configurations:Dist"
+      defines { "EV_DIST", "NDEBUG" }
+      runtime "Release"
+      optimize "on"
+
+project "SceneEditor"
+   location "SceneEditor"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++17"

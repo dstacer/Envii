@@ -68,8 +68,8 @@ namespace Envii
 			{ ShaderDataType::Float3, "a_Pos" },
 			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Float, "a_TexSlot" },
-			{ ShaderDataType::Float, "a_TexCoordScale" }
+			{ ShaderDataType::Float,  "a_TexSlot" },
+			{ ShaderDataType::Float,  "a_TexCoordScale" }
 		});
 
 		s_Data->quadBufferStart = new QuadVertex[s_Data->MAX_VERTS];
