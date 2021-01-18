@@ -20,6 +20,10 @@ namespace Envii
 			m_VerticalExtent = screenHalfHeight; 
 			m_Camera.SetProjection(m_AspectRatio, screenHalfHeight);
 		}
+		void SetAspectRatio(uint32_t width, uint32_t height) {
+			m_AspectRatio = (float)width / height;
+			m_Camera.SetProjection(m_AspectRatio, m_VerticalExtent);
+		}
 
 	private:
 		bool OnMouseScroll(MouseScrollEvent e);

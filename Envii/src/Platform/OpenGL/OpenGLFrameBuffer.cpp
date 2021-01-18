@@ -15,11 +15,14 @@ namespace Envii
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		GlApiCall(glDeleteFramebuffers(1, &m_Id));
+		GlApiCall(glDeleteTextures(1, &m_ColorAttach));
+		GlApiCall(glDeleteTextures(1, &m_DepthAttach));
 	}
 
 	void OpenGLFrameBuffer::Bind() const
 	{
 		GlApiCall(glBindFramebuffer(GL_FRAMEBUFFER, m_Id));
+		GlApiCall(glViewport(0, 0, m_Specs.Width, m_Specs.Height));
 	}
 
 	void OpenGLFrameBuffer::Unbind() const
@@ -29,6 +32,13 @@ namespace Envii
 
 	void OpenGLFrameBuffer::Recreate(const FbSpecs& specs)
 	{
+		if (m_Id != 0)
+		{
+			GlApiCall(glDeleteFramebuffers(1, &m_Id));
+			GlApiCall(glDeleteTextures(1, &m_ColorAttach));
+			GlApiCall(glDeleteTextures(1, &m_DepthAttach));
+		}
+		
 		// Make the color attachment texture 
 		GlApiCall(glGenTextures(1, &m_ColorAttach));
 		GlApiCall(glBindTexture(GL_TEXTURE_2D, m_ColorAttach));

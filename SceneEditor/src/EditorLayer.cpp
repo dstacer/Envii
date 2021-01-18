@@ -153,13 +153,29 @@ namespace Envii
 		ImGui::Text("Render Stats:");
 		ImGui::Text("  Quad Count: %d", stats.QuadCount);
 		ImGui::Text("  Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+		
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+		ImGui::Begin("Viewport");
+		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		if (viewportSize.x * viewportSize.y != 0 && (m_ViewportSize.x != viewportSize.x || m_ViewportSize.y != viewportSize.y))
+		{
+			uint32_t newWidth = (uint32_t)viewportSize.x;
+			uint32_t newHeight = (uint32_t)viewportSize.y;
+
+			m_CamCtl.SetAspectRatio(newWidth, newHeight);
+			m_Framebuffer->Resize(newWidth, newHeight);
+			m_ViewportSize = { viewportSize.x, viewportSize.y };
+		}
+		
 		uint32_t fbTexId = m_Framebuffer->GetColorAttachmentId();
 		ImGui::Image((void*)fbTexId, 
-					 ImVec2((float)m_Framebuffer->GetFrameBufferSpecs().Width, (float)m_Framebuffer->GetFrameBufferSpecs().Height), 
+					 ImVec2((float)m_ViewportSize.x, (float)m_ViewportSize.y),
 					 ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 		//ImGui::Image((void*)m_Tex->GetId(), ImVec2(m_Tex->GetWidth(), m_Tex->GetHeight()), ImVec2(0,1), ImVec2(1,0));
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::OnEvent(Event& event)

@@ -79,8 +79,7 @@ namespace Envii
 
 	bool CameraController::OnWindowResize(WindowResizeEvent e)
 	{
-		m_AspectRatio = (float)e.GetWidth() / e.GetHeight();
-		m_Camera.SetProjection(m_AspectRatio, m_VerticalExtent);
+		SetAspectRatio(e.GetWidth(), e.GetHeight());
 		return false;
 	}
 }

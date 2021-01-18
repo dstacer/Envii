@@ -43,6 +43,7 @@ namespace Envii
 		uint32_t m_MapWidth = 0, m_MapHeight = 0;
 
 		Ref<FrameBuffer> m_Framebuffer;
+		glm::vec2 m_ViewportSize;
 
 	};
 }
