@@ -5,6 +5,7 @@
 
 namespace Envii
 {
+	static const uint32_t s_MaxFBSize = 8192;
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FbSpecs& specs)
 		: m_Specs(specs),
 		  m_Id(0)
@@ -28,6 +29,17 @@ namespace Envii
 	void OpenGLFrameBuffer::Unbind() const
 	{
 		GlApiCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	}
+
+	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
+	{
+		if (width <= 0 || height <= 0 || width > s_MaxFBSize || height > s_MaxFBSize)
+		{
+			EV_CORE_WARN("Attempted framebuffer resize to invalid values: {0}, {1}", width, height);
+			return;
+		}
+		m_Specs = { width, height };
+		Recreate(m_Specs);
 	}
 
 	void OpenGLFrameBuffer::Recreate(const FbSpecs& specs)

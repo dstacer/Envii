@@ -14,6 +14,7 @@ namespace Envii
 	{
 	public:
 		static Ref<FrameBuffer> Create(const FbSpecs& specs);
+		virtual ~FrameBuffer() {}
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

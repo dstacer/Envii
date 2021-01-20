@@ -25,6 +25,8 @@ namespace Envii
 		inline Window& GetWindow() { return *m_Window; }
 		inline static App& Get() { return *s_Instance; }
 
+		inline ImguiLayer* GetImguiLayer() { return m_ImguiLayer; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);

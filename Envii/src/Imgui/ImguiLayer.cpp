@@ -56,6 +56,16 @@ namespace Envii
 		//ImGui::ShowDemoWindow(&show);
 	}
 
+	void ImguiLayer::OnEvent(Event& event)
+	{
+		if (m_ConsumeEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			event.m_handled |= event.IsInCategory(EventCategory::Mouse) & io.WantCaptureMouse;
+			event.m_handled |= event.IsInCategory(EventCategory::Keyboard) & io.WantCaptureKeyboard;
+		}
+	}
+
 	void ImguiLayer::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();

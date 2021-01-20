@@ -44,6 +44,8 @@ namespace Envii
 
 		Ref<FrameBuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize;
+		bool m_ViewportFocused = false;
+		bool m_ViewportHovered = false;
 
 	};
 }

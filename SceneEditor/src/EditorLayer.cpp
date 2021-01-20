@@ -74,7 +74,8 @@ namespace Envii
 	{
 		EV_PROFILE_FUNCTION();
 
-		m_CamCtl.OnUpdate(ts);
+		if (m_ViewportFocused)
+			m_CamCtl.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
 	
@@ -158,8 +159,15 @@ namespace Envii
 		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 		ImGui::Begin("Viewport");
+
+		// Determine whether to consume mouse and keyboard events
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+
+		App::Get().GetImguiLayer()->ConsumeEvents(!m_ViewportFocused || !m_ViewportHovered);
+
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		if (viewportSize.x * viewportSize.y != 0 && (m_ViewportSize.x != viewportSize.x || m_ViewportSize.y != viewportSize.y))
+		if (viewportSize.x > 0.f && viewportSize.y > 0.f && (m_ViewportSize.x != viewportSize.x || m_ViewportSize.y != viewportSize.y))
 		{
 			uint32_t newWidth = (uint32_t)viewportSize.x;
 			uint32_t newHeight = (uint32_t)viewportSize.y;

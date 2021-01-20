@@ -2,46 +2,37 @@
 
 #include "GLFW/glfw3.h"
 #include "Core/App.h"
-#include "WindowsInput.h"
+#include "Core/Input.h"
 
 namespace Envii
 {
-	Input* Input::s_Instance = new WindowsInput();
-	WindowsInput::WindowsInput()
-	{
-	}
-
-	WindowsInput::~WindowsInput()
-	{
-	}
-
-	bool WindowsInput::IsKeyPressedImpl(int keycode) const
+	bool Input::IsKeyPressed(int keycode)
 	{
 		GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(App::Get().GetWindow().GetNativeWindow());
 		int state = glfwGetKey(nativeWindow, keycode);
 		return (state == GLFW_PRESS || state == GLFW_REPEAT);
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int keycode) const
+	bool Input::IsMouseButtonPressed(int keycode)
 	{
 		GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(App::Get().GetWindow().GetNativeWindow());
 		int state = glfwGetMouseButton(nativeWindow, keycode);
 		return (state == GLFW_PRESS);
 	}
 
-	float WindowsInput::GetMouseXImpl() const
+	float Input::GetMouseX()
 	{
-		auto [x, y] = GetMousePosImpl();
+		auto [x, y] = GetMousePos();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl() const
+	float Input::GetMouseY()
 	{
-		auto[x, y] =  GetMousePosImpl();
+		auto[x, y] =  GetMousePos();
 		return y;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePosImpl() const
+	std::pair<float, float> Input::GetMousePos()
 	{
 		GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(App::Get().GetWindow().GetNativeWindow());
 		double x = 0, y = 0;

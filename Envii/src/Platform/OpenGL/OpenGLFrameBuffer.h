@@ -14,11 +14,7 @@ namespace Envii
 		virtual void Unbind() const override;
 		virtual const FbSpecs& GetFrameBufferSpecs() const override { return m_Specs; }
 		virtual uint32_t GetColorAttachmentId() const override { return m_ColorAttach; }
-		virtual void Resize(uint32_t width, uint32_t height) override 
-		{
-			m_Specs = { width, height };
-			Recreate(m_Specs);
-		}
+		virtual void Resize(uint32_t width, uint32_t height) override;
 
 	private:
 		void Recreate(const FbSpecs& specs);

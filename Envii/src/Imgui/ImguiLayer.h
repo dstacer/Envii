@@ -16,11 +16,15 @@ namespace Envii
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnImguiRender() override;
+		virtual void OnEvent(Event& event) override;
+
+		void ConsumeEvents(bool shouldConsume) { m_ConsumeEvents = shouldConsume; }
 		
 		void Begin();
 		void End();
 		
 	private:
 		float m_Time = 0.0f;
+		bool m_ConsumeEvents = false;
 	};
 }
