@@ -36,7 +36,9 @@ namespace Envii
 
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer"), 
-		  m_CamCtl(1.778f)
+		  m_CamCtl(1.778f),
+		  m_ActiveScene(CreateRef<Scene>()),
+		  m_Rect(m_ActiveScene->CreateEntity("Square"))
 	{
 		m_MapWidth = s_PondWidth;
 		m_MapHeight = (uint32_t)strlen(s_MapTiles) / m_MapWidth;
@@ -63,6 +65,8 @@ namespace Envii
 		m_Framebuffer = FrameBuffer::Create(fbSpecs);
   
 		m_CamCtl.SetVerticalExtent(7.2f);
+
+		m_Rect.AddComponent<SpriteRendererComponent>(glm::vec4( 0.f,1.f, 0.f, 1.f ));
 	}
 
 	void EditorLayer::OnDetach()
@@ -84,6 +88,7 @@ namespace Envii
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
+		
 #if 0
 		Renderer2D::BeginScene(m_CamCtl.GetCamera());
 	
@@ -102,9 +107,8 @@ namespace Envii
 
 		Renderer2D::EndScene();
 #endif
-#if 1
 		Renderer2D::BeginScene(m_CamCtl.GetCamera());
-
+#if 0
 		for (int y = 0; y < (int)m_MapHeight; y++)
 			for (int x = 0; x < (int)m_MapWidth; x++)
 			{
@@ -124,10 +128,13 @@ namespace Envii
 											tile, 1.0f, 3);
 			}
 
+
 		Renderer2D::DrawQuad({ 0.f, 0.f, -0.1f }, { 1.f, 1.f }, { 1.0f, 1.0f, 1.0f, 1.0f }, m_TreeTex, 1.0f, 3);
-	
+#endif	
+		// Update scene
+		m_ActiveScene->OnUpdate(ts);
 		Renderer2D::EndScene();
-#endif
+
 		m_Framebuffer->Unbind();
 	}
 
@@ -151,6 +158,13 @@ namespace Envii
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	
 		ImGui::Begin("Envii Info");
+		ImGui::Separator();
+		const std::string& tag = m_Rect.GetComponent<TagComponent>().Tag;
+		ImGui::Text(tag.c_str());
+		glm::vec4& rectColor = m_Rect.GetComponent<SpriteRendererComponent>().Color;
+		ImGui::ColorEdit4("Color", glm::value_ptr(rectColor));
+		ImGui::Separator();
+
 		ImGui::Text("Render Stats:");
 		ImGui::Text("  Quad Count: %d", stats.QuadCount);
 		ImGui::Text("  Draw Calls: %d", stats.DrawCalls);

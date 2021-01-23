@@ -47,5 +47,9 @@ namespace Envii
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
 
+		Ref<Scene> m_ActiveScene;
+		glm::vec4 m_RectColor;
+		Entity m_Rect;
+
 	};
 }

@@ -153,7 +153,25 @@ namespace Envii
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
 		EV_CORE_ASSERT(size == m_Width * m_Height * m_Channels, "Buffer size doesn't match width, height, data format.");
+		uint32_t internalFormat = 0, dataFormat = 0;
+		switch (m_Channels)
+		{
+			case 3:
+			{
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+				break;
+			}
+			case 4:
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+				break;
+			}
+		}
+		EV_CORE_ASSERT(internalFormat && dataFormat, "Pixel data format not supported.");
+
 		Bind();
-		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+		GlApiCall(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, data));
 	}
 }

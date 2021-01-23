@@ -14,6 +14,7 @@ extIncludeDirs["glfw"] = "%{wks.name}/thirdparty/glfw/include"
 extIncludeDirs["glm"] = "%{wks.name}/thirdparty/glm"
 extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
 extIncludeDirs["stb_image"] = "%{wks.name}/thirdparty/stb_image"
+extIncludeDirs["entt"] = "%{wks.name}/thirdparty/entt/include"
 
 group "Dependencies"
 	include "Envii/thirdparty/glfw"
@@ -59,7 +60,8 @@ project "Envii"
         "%{extIncludeDirs.imgui}",
         "%{extIncludeDirs.imgui}/backends",
         "%{extIncludeDirs.glm}",
-        "%{extIncludeDirs.stb_image}"
+        "%{extIncludeDirs.stb_image}",
+        "%{extIncludeDirs.entt}"
    }
 
    links 
@@ -109,7 +111,8 @@ project "Sandbox"
    { "%{wks.location}/Envii/src/Client",
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
      "%{wks.location}/Envii/thirdparty/glm", 
-     "%{wks.location}/Envii/thirdparty/imgui" 
+     "%{wks.location}/Envii/thirdparty/imgui",
+     "%{wks.location}/Envii/thirdparty/entt/include"
    }
    
    links "Envii" 
@@ -148,7 +151,8 @@ project "SceneEditor"
    { "%{wks.location}/Envii/src/Client",
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
      "%{wks.location}/Envii/thirdparty/glm", 
-     "%{wks.location}/Envii/thirdparty/imgui" 
+     "%{wks.location}/Envii/thirdparty/imgui",
+     "%{wks.location}/Envii/thirdparty/entt/include"
    }
    
    links "Envii" 

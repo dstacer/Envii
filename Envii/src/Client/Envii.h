@@ -27,5 +27,6 @@
 #include "../Render/Texture.h"
 #include "../Render/SubTexture2D.h"
 
-
+#include "../Scene/Scene.h"
+#include "../Scene/Entity.h"
 #include "../Render/CameraController.h"
