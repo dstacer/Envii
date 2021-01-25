@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "../Render/SceneCamera.h"
 
 namespace Envii
 {
@@ -39,5 +40,15 @@ namespace Envii
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& color)
 			: Color(color) {}
+	};
+
+	struct CameraComponent
+	{
+		SceneCamera Cam;
+		bool Primary = true;
+		bool FixedAspect = false;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
 	};
 }

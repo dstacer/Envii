@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "OrthoCamera.h"
+#include "Camera.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
 
@@ -13,6 +14,7 @@ namespace Envii
 		static void Init();
 		static void Shutdown();
 		static void BeginScene(const OrthoCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& camTransform);
 		static void Flush();
 		static void EndScene();
 

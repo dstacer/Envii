@@ -50,6 +50,7 @@ namespace Envii
 		Ref<Scene> m_ActiveScene;
 		glm::vec4 m_RectColor;
 		Entity m_Rect;
+		Entity m_Camera;
 
 	};
 }

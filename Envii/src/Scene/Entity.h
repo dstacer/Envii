@@ -35,9 +35,9 @@ namespace Envii
 			return m_Scene->m_Registry.emplace<T>(m_Id, std::forward<Args>(args)...);
 		}
 
-		operator bool() const { return (int)m_Id != 0; }
+		operator bool() const { return m_Id != entt::null; }
 	private:
-		entt::entity m_Id{ 0 };
+		entt::entity m_Id{ entt::null };
 		Scene* m_Scene;
 	};
 }

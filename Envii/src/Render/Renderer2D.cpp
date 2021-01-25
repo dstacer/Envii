@@ -123,6 +123,14 @@ namespace Envii
 		s_Data->currTexSlot = 1;
     }
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& camTransform)
+	{
+		s_Data->m_ViewProj = camera.GetProjection() * glm::inverse(camTransform);
+		s_Data->quadBufferPtr = s_Data->quadBufferStart;
+		s_Data->quadIndexCount = 0;
+		s_Data->currTexSlot = 1;
+	}
+
 	void Renderer2D::Flush()
 	{
 		for (uint32_t i = 0; i < s_Data->currTexSlot; i++)

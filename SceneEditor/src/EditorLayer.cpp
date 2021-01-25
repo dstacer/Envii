@@ -38,10 +38,12 @@ namespace Envii
 		: Layer("EditorLayer"), 
 		  m_CamCtl(1.778f),
 		  m_ActiveScene(CreateRef<Scene>()),
-		  m_Rect(m_ActiveScene->CreateEntity("Square"))
+		  m_Rect(m_ActiveScene->CreateEntity("Square")),
+		  m_Camera(m_ActiveScene->CreateEntity("Camera"))
 	{
 		m_MapWidth = s_PondWidth;
 		m_MapHeight = (uint32_t)strlen(s_MapTiles) / m_MapWidth;
+		m_Camera.AddComponent<CameraComponent>();
 	}
 
 	EditorLayer::~EditorLayer()
@@ -78,6 +80,14 @@ namespace Envii
 	{
 		EV_PROFILE_FUNCTION();
 
+		if (FbSpecs specs = m_Framebuffer->GetFrameBufferSpecs(); specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y)
+		{
+			uint32_t newWidth = (uint32_t)m_ViewportSize.x, newHeight = (uint32_t)m_ViewportSize.y;
+			m_CamCtl.SetAspectRatio(newWidth, newHeight);
+			m_Framebuffer->Resize(newWidth, newHeight);
+			m_ActiveScene->OnViewportResize(newWidth, newHeight);
+		}
+
 		if (m_ViewportFocused)
 			m_CamCtl.OnUpdate(ts);
 
@@ -107,7 +117,7 @@ namespace Envii
 
 		Renderer2D::EndScene();
 #endif
-		Renderer2D::BeginScene(m_CamCtl.GetCamera());
+		//Renderer2D::BeginScene(m_CamCtl.GetCamera());
 #if 0
 		for (int y = 0; y < (int)m_MapHeight; y++)
 			for (int x = 0; x < (int)m_MapWidth; x++)
@@ -133,7 +143,7 @@ namespace Envii
 #endif	
 		// Update scene
 		m_ActiveScene->OnUpdate(ts);
-		Renderer2D::EndScene();
+		//Renderer2D::EndScene();
 
 		m_Framebuffer->Unbind();
 	}
@@ -141,29 +151,40 @@ namespace Envii
 	void EditorLayer::OnImguiRender()
 	{
 		auto stats = Renderer2D::GetStats();
-	
-			if (ImGui::BeginMainMenuBar())
+
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::BeginMenu("File"))
+				if (ImGui::MenuItem("Exit"))
 				{
-					if (ImGui::MenuItem("Exit"))
-					{
-						App::Get().Close();
-					}
-					ImGui::EndMenu();
+					App::Get().Close();
 				}
-				ImGui::EndMainMenuBar();
+				ImGui::EndMenu();
 			}
-	
+			ImGui::EndMainMenuBar();
+		}
+
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-	
-		ImGui::Begin("Envii Info");
-		ImGui::Separator();
-		const std::string& tag = m_Rect.GetComponent<TagComponent>().Tag;
-		ImGui::Text(tag.c_str());
-		glm::vec4& rectColor = m_Rect.GetComponent<SpriteRendererComponent>().Color;
-		ImGui::ColorEdit4("Color", glm::value_ptr(rectColor));
-		ImGui::Separator();
+
+		ImGui::Begin("Scene");
+		if (m_Rect)
+		{
+			ImGui::Separator();
+			const std::string& tag = m_Rect.GetComponent<TagComponent>().Tag;
+			ImGui::Text(tag.c_str());
+			glm::vec4& rectColor = m_Rect.GetComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("Color", glm::value_ptr(rectColor));
+			ImGui::Separator();
+			ImGui::Text("Camera");
+			auto& camera = m_Camera.GetComponent<CameraComponent>().Cam;
+			float orthoHeight = camera.GetHeight();
+			
+			if (ImGui::DragFloat("Ortho Height", &orthoHeight))
+				camera.SetHeight(orthoHeight);
+
+			ImGui::Separator();
+		}
 
 		ImGui::Text("Render Stats:");
 		ImGui::Text("  Quad Count: %d", stats.QuadCount);
@@ -183,11 +204,6 @@ namespace Envii
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (viewportSize.x > 0.f && viewportSize.y > 0.f && (m_ViewportSize.x != viewportSize.x || m_ViewportSize.y != viewportSize.y))
 		{
-			uint32_t newWidth = (uint32_t)viewportSize.x;
-			uint32_t newHeight = (uint32_t)viewportSize.y;
-
-			m_CamCtl.SetAspectRatio(newWidth, newHeight);
-			m_Framebuffer->Resize(newWidth, newHeight);
 			m_ViewportSize = { viewportSize.x, viewportSize.y };
 		}
 		

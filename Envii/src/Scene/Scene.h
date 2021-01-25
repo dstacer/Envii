@@ -10,12 +10,13 @@ namespace Envii
 	class Scene
 	{
 	public:
-		Scene();
+		Scene() = default;
 		virtual ~Scene() {}
 
 		void OnUpdate(TimeStep ts);
 
 		Entity CreateEntity(const std::string& name = "UnnamedEntity");
+		void OnViewportResize(uint32_t width, uint32_t height);
 
 	private:
 		entt::registry m_Registry;

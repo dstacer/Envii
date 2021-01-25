@@ -170,6 +170,8 @@
     </ClInclude>
     <ClInclude Include="src\Scene\Component.h" />
     <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\Render\Camera.h" />
+    <ClInclude Include="src\Render\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\App.cpp">
@@ -269,5 +271,6 @@
       <Filter>thirdparty\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\Render\SceneCamera.cpp" />
   </ItemGroup>
 </Project>
