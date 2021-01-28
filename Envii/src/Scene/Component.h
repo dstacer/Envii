@@ -57,24 +57,17 @@ namespace Envii
 
 	struct NativeScriptComponent
 	{
-		ScriptableEntity* script = nullptr;
+		ScriptableEntity* scriptable = nullptr;
+		
 		// Creation/Destruction
-		std::function<void()> InstanceFunc;
-		std::function<void()> DeInstanceFunc;
-
-		// ScriptableEntity Iface
-		std::function<void()> OnCreateFunc;
-		std::function<void()> OnDestroyFunc;
-		std::function<void(TimeStep ts)> OnUpdateFunc;
+		std::function<ScriptableEntity*()> InstantiateScript;
+		std::function<void()> DestroyScript;
 
 		template<typename T>
 		void Bind()
 		{
-			InstanceFunc =   [&]() { script = new T(); };
-			DeInstanceFunc = [&]() { delete (T*)script; };
-			OnCreateFunc =   [&]() { ((T*)script)->OnCreate(); };
-			OnDestroyFunc =  [&]() { ((T*)script)->OnDestroy(); };
-			OnUpdateFunc =   [&](TimeStep ts) { ((T*)script)->OnUpdate(ts); };
+			InstantiateScript = [&]() { return new T(); };
+			DestroyScript =		[&]() { delete (T*)scriptable; scriptable = nullptr; };
 		}
 	};
 }

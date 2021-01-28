@@ -11,13 +11,13 @@ namespace Envii
 		// Update scripts
 		m_Registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& nsc)
 		{
-			if (!nsc.script)
+			if (!nsc.scriptable)
 			{
-				nsc.InstanceFunc();
-				nsc.script->m_Entity = Entity(entity, this);
-				nsc.OnCreateFunc();
+				nsc.scriptable = nsc.InstantiateScript();
+				nsc.scriptable->m_Entity = Entity(entity, this);
+				nsc.scriptable->OnCreate();
 			}
-			nsc.OnUpdateFunc(ts);
+			nsc.scriptable->OnUpdate(ts);
 		});
 
 
@@ -26,7 +26,7 @@ namespace Envii
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group)
 		{
-			auto& [camera, transform] = group.get<CameraComponent, TransformComponent>(entity);
+			auto [camera, transform] = group.get<CameraComponent, TransformComponent>(entity);
 			if (camera.Primary)
 			{
 				mainCamera = &camera.Cam;
@@ -41,7 +41,7 @@ namespace Envii
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); 
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); 
 				Renderer2D::DrawQuad(transform, sprite.Color);
 			}
 			Renderer2D::EndScene();
