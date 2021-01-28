@@ -29,4 +29,6 @@
 
 #include "../Scene/Scene.h"
 #include "../Scene/Entity.h"
+#include "../Scene/Component.h"
+#include "../Scene/ScriptableEntity.h"
 #include "../Render/CameraController.h"

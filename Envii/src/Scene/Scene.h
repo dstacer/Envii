@@ -2,7 +2,7 @@
 
 #include "Entt.hpp"
 #include "../Core/Timestep.h"
-#include "Component.h"
+//#include "Component.h"
 
 namespace Envii
 {

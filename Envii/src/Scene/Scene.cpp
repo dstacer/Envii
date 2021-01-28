@@ -2,12 +2,25 @@
 #include "Render/Renderer2D.h"
 #include "Entity.h"
 #include "Scene.h"
+#include "Component.h"
 
 namespace Envii
 {
 	void Scene::OnUpdate(TimeStep ts)
 	{
-		
+		// Update scripts
+		m_Registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& nsc)
+		{
+			if (!nsc.script)
+			{
+				nsc.InstanceFunc();
+				nsc.script->m_Entity = Entity(entity, this);
+				nsc.OnCreateFunc();
+			}
+			nsc.OnUpdateFunc(ts);
+		});
+
+
 		Camera* mainCamera = nullptr;
 		glm::mat4* camTransform;
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);

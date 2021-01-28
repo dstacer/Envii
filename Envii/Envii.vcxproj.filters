@@ -172,6 +172,7 @@
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Render\Camera.h" />
     <ClInclude Include="src\Render\SceneCamera.h" />
+    <ClInclude Include="src\Scene\ScriptableEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\App.cpp">

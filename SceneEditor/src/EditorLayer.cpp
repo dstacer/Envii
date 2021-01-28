@@ -69,6 +69,29 @@ namespace Envii
 		m_CamCtl.SetVerticalExtent(7.2f);
 
 		m_Rect.AddComponent<SpriteRendererComponent>(glm::vec4( 0.f,1.f, 0.f, 1.f ));
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate() { std::cout << "OnCreate" << std::endl; }
+			void OnDestroy() {}
+			void OnUpdate(TimeStep ts) { 
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 5.f;
+
+				if (Input::IsKeyPressed(EV_KEY_A))
+					transform[3].x -= speed * ts;
+				if (Input::IsKeyPressed(EV_KEY_D))
+					transform[3].x += speed * ts;
+				if (Input::IsKeyPressed(EV_KEY_S))
+					transform[3].y -= speed * ts;
+				if (Input::IsKeyPressed(EV_KEY_W))
+					transform[3].y += speed * ts;
+			}
+
+		};
+
+		m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
