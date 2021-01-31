@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Envii.h"
+#include "Panels/SceneGraphPanel.h"
 
 namespace Envii
 {
@@ -51,6 +52,9 @@ namespace Envii
 		glm::vec4 m_RectColor;
 		Entity m_Rect;
 		Entity m_Camera;
+
+		// Panels
+		SceneGraphPanel m_ScenePanel;
 
 	};
 }

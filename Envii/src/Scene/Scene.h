@@ -2,6 +2,7 @@
 
 #include "Entt.hpp"
 #include "../Core/Timestep.h"
+#include "../Core/Core.h"
 
 namespace Envii
 {
@@ -21,5 +22,6 @@ namespace Envii
 		entt::registry m_Registry;
 
 		friend class Entity;
+		friend class SceneGraphPanel;
 	};
 }

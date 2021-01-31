@@ -132,10 +132,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorLayer.h" />
+    <ClInclude Include="src\Panels\SceneGraphPanel.h" />
     <ClInclude Include="src\SceneEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
+    <ClCompile Include="src\Panels\SceneGraphPanel.cpp" />
     <ClCompile Include="src\SceneEditor.cpp" />
   </ItemGroup>
   <ItemGroup>

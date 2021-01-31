@@ -92,6 +92,7 @@ namespace Envii
 		};
 
 		m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		m_ScenePanel.SetScene(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -189,6 +190,9 @@ namespace Envii
 		}
 
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+		
+		// Draw scene graph panel
+		m_ScenePanel.OnImguiRender();
 
 		ImGui::Begin("Scene");
 		if (m_Rect)

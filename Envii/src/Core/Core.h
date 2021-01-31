@@ -2,6 +2,8 @@
 
 #include <functional>
 #include <memory>
+#include "Log.h"
+
 #ifdef EV_PLATFORM_WINDOWS
 	#define EV_API
 #else
