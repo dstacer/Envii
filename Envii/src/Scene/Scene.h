@@ -2,6 +2,7 @@
 
 #include "Entt.hpp"
 #include "../Core/Timestep.h"
+#include "../Events/MouseEvent.h"
 #include "../Core/Core.h"
 
 namespace Envii
@@ -14,6 +15,8 @@ namespace Envii
 		virtual ~Scene() {}
 
 		void OnUpdate(TimeStep ts);
+		void OnEvent(Event& event);
+		bool OnMouseScrollEvent(MouseScrollEvent& event);
 
 		Entity CreateEntity(const std::string& name = "UnnamedEntity");
 		void OnViewportResize(uint32_t width, uint32_t height);

@@ -17,7 +17,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLShader>(filepath);
+				return CreateRef<OpenGLShader>(filepath);
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLShader>(name, vertSrc, fragSrc);
+				return CreateRef<OpenGLShader>(name, vertSrc, fragSrc);
 			}
 		}
 

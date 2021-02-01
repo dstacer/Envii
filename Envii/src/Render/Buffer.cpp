@@ -17,7 +17,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLVertexBuffer>(size);
+				return CreateRef<OpenGLVertexBuffer>(size);
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLVertexBuffer>(vertices, size);
+				return CreateRef<OpenGLVertexBuffer>(vertices, size);
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLIndexBuffer>(indices, count);
+				return CreateRef<OpenGLIndexBuffer>(indices, count);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

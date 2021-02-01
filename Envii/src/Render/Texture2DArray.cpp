@@ -15,7 +15,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLTexture2DArray>(filepaths, texSlot);
+				return CreateRef<OpenGLTexture2DArray>(filepaths, texSlot);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

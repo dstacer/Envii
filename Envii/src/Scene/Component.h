@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "../Render/SceneCamera.h"
 #include "ScriptableEntity.h"
 
@@ -24,15 +25,25 @@ namespace Envii
 
 	struct TransformComponent
 	{
-		glm::mat4 Transform = glm::mat4(1.0f);
+		glm::vec3 Translation = { 0.f, 0.f, 0.f };
+		glm::vec3 Rotation = { 0.f, 0.f, 0.f };
+		glm::vec3 Scale = { 1.f, 1.f, 1.f };
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform)
-			: Transform(transform) {}
+		TransformComponent(const glm::vec3& translation)
+			: Translation(translation) {}
 
-		operator glm::mat4& () { return Transform; }
-		operator const glm::mat4& () const { return Transform; }
+		glm::mat4 GetTransform() const 
+		{
+			glm::mat4 translation = glm::translate(glm::mat4(1.0f), Translation);
+			glm::mat4 rotation = glm::rotate(glm::mat4(1.f), Rotation.x, { 1.f, 0.f, 0.f })
+							   * glm::rotate(glm::mat4(1.f), Rotation.y, { 0.f, 1.f, 0.f })
+							   * glm::rotate(glm::mat4(1.f), Rotation.z, { 0.f, 0.f, 1.f });
+			glm::mat4 scale = glm::scale(glm::mat4(1.f), Scale);
+
+			return translation * rotation * scale;
+		}
 	};
 
 	struct SpriteRendererComponent

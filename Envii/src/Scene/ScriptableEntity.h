@@ -19,6 +19,7 @@ namespace Envii
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}
 		virtual void OnUpdate(TimeStep ts) {}
+		virtual void OnMouseScrollEvent(MouseScrollEvent e) {}
 
 	private:
 		Entity m_Entity;

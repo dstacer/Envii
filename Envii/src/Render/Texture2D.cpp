@@ -15,7 +15,7 @@ namespace Envii
 		}
 		case RenderApi::Api::OPENGL:
 		{
-			return std::make_shared<OpenGLTexture2D>(width, height, numChannels);
+			return CreateRef<OpenGLTexture2D>(width, height, numChannels);
 		}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");
@@ -33,7 +33,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLTexture2D>(width, height, numChannels, data);
+				return CreateRef<OpenGLTexture2D>(width, height, numChannels, data);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");
@@ -51,7 +51,7 @@ namespace Envii
 			}
 			case RenderApi::Api::OPENGL:
 			{
-				return std::make_shared<OpenGLTexture2D>(filepath, texSlot);
+				return CreateRef<OpenGLTexture2D>(filepath, texSlot);
 			}
 		}
 		EV_CORE_ASSERT(false, "Unknown Renderer API.");

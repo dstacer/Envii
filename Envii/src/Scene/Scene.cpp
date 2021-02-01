@@ -22,7 +22,7 @@ namespace Envii
 
 
 		Camera* mainCamera = nullptr;
-		glm::mat4* camTransform;
+		glm::mat4 camTransform;
 		auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group)
 		{
@@ -30,23 +30,45 @@ namespace Envii
 			if (camera.Primary)
 			{
 				mainCamera = &camera.Cam;
-				camTransform = &transform.Transform;
+				camTransform = transform.GetTransform();
 				break;
 			}
 		}
 
 		if (mainCamera)
 		{
-			Renderer2D::BeginScene(*mainCamera, *camTransform);
+			Renderer2D::BeginScene(*mainCamera, camTransform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); 
-				Renderer2D::DrawQuad(transform, sprite.Color);
+				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
 			}
 			Renderer2D::EndScene();
 
 		}
+	}
+
+	void Scene::OnEvent(Event& event)
+	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<MouseScrollEvent>(EV_BIND_EVENT_CB(Scene::OnMouseScrollEvent));
+	}
+
+	bool Scene::OnMouseScrollEvent(MouseScrollEvent& event)
+	{
+		// Update scripts
+		m_Registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& nsc)
+		{
+			if (!nsc.scriptable)
+			{
+				nsc.scriptable = nsc.InstantiateScript();
+				nsc.scriptable->m_Entity = Entity(entity, this);
+				nsc.scriptable->OnCreate();
+			}
+			nsc.scriptable->OnMouseScrollEvent(event);
+		});
+		return true;
 	}
 
 	Entity Scene::CreateEntity(const std::string& tagName)
@@ -59,7 +81,6 @@ namespace Envii
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
-		
 		auto view = m_Registry.view<CameraComponent>();
 		for (auto entity : view)
 		{
