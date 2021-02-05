@@ -37,6 +37,7 @@ namespace Envii
 
 		operator bool() const { return m_Id != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_Id; }
+		operator entt::entity() const { return m_Id; }
 
 		bool operator==(const Entity& other) const 
 		{
@@ -47,6 +48,6 @@ namespace Envii
 
 	private:
 		entt::entity m_Id{ entt::null };
-		Scene* m_Scene;
+		Scene* m_Scene = nullptr;
 	};
 }

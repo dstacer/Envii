@@ -7,6 +7,13 @@
 
 namespace Envii
 {
+	enum Fonts
+	{
+		OpenSansBold = 0,
+		OpenSansReg = 1,
+		NumFonts = 2
+	};
+
 	class ImguiLayer : public Layer
 	{
 	public:
@@ -22,6 +29,8 @@ namespace Envii
 		
 		void Begin();
 		void End();
+
+		void SetDarkThemColors();
 		
 	private:
 		float m_Time = 0.0f;

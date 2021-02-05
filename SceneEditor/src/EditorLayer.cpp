@@ -35,7 +35,6 @@ namespace Envii
 		class CameraController : public ScriptableEntity
 		{
 		public:
-			void OnCreate() override { std::cout << "OnCreate" << std::endl; }
 			void OnUpdate(TimeStep ts) override { 
 				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.f;
@@ -49,6 +48,7 @@ namespace Envii
 				if (Input::IsKeyPressed(EV_KEY_W))
 					translation.y += speed * ts;
 			}
+
 			void OnMouseScrollEvent(MouseScrollEvent event) override
 			{
 				// Handle mouse scroll by zooming camera
@@ -125,10 +125,18 @@ namespace Envii
 			ImGui::EndMainMenuBar();
 		}
 
+		// Set minimum docked window width before drawing SceneGraphPanel
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinWidth = style.WindowMinSize.x;
+		style.WindowMinSize.x = 395.f;
+		
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		
 		// Draw scene graph panel
 		m_ScenePanel.OnImguiRender();
+
+		// Restore minimum window width
+		style.WindowMinSize.x = minWinWidth;
 
 		ImGui::Begin("Scene");
 		ImGui::Separator();

@@ -19,6 +19,7 @@ namespace Envii
 		bool OnMouseScrollEvent(MouseScrollEvent& event);
 
 		Entity CreateEntity(const std::string& name = "UnnamedEntity");
+		void DestroyEntity(Entity entity);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 	private:
