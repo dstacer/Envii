@@ -10,3 +10,6 @@
 [submodule "Envii/thirdparty/glm"]
 	path = Envii/thirdparty/glm
 	url = https://github.com/g-truc/glm
+[submodule "Envii/thirdparty/yaml-cpp"]
+	path = Envii/thirdparty/yaml-cpp
+	url = https://github.com/dstacer/yaml-cpp.git
