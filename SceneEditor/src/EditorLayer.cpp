@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "imgui.h"
+#include <imgui.h>
 #include "EditorLayer.h"
 
 namespace Envii
@@ -8,7 +8,7 @@ namespace Envii
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer"), 
 		  m_ActiveScene(CreateRef<Scene>()),
-		  m_Rect(m_ActiveScene->CreateEntity("Square")),
+		  //m_Rect(m_ActiveScene->CreateEntity("Square")),
 		  m_Camera(m_ActiveScene->CreateEntity("Camera"))
 	{
 		m_Camera.AddComponent<CameraComponent>();
@@ -21,16 +21,16 @@ namespace Envii
 
 	void EditorLayer::OnAttach()
 	{
-		m_Tex = Texture2D::Create("assets/textures/Kreator.png", 1);
-		m_SquareTex = Texture2D::Create("assets/textures/Checkerboard.png", 2);
-		m_SpriteSheet = Texture2D::Create("assets/textures/RPGpack_sheet.png", 3);
-		m_TreeTex = SubTexture2D::CreateFromIndices(m_SpriteSheet, glm::vec2(2.f, 1.f), 64.f, glm::vec2(1, 2));
+		//m_Tex = Texture2D::Create("assets/textures/Kreator.png", 1);
+		//m_SquareTex = Texture2D::Create("assets/textures/Checkerboard.png", 2);
+		//m_SpriteSheet = Texture2D::Create("assets/textures/RPGpack_sheet.png", 3);
+		//m_TreeTex = SubTexture2D::CreateFromIndices(m_SpriteSheet, glm::vec2(2.f, 1.f), 64.f, glm::vec2(1, 2));
 	
 		FbSpecs fbSpecs = { App::Get().GetWindow().GetWidth(), App::Get().GetWindow().GetHeight() };
 
 		m_Framebuffer = FrameBuffer::Create(fbSpecs);
 
-		m_Rect.AddComponent<SpriteRendererComponent>(glm::vec4( 0.f,1.f, 0.f, 1.f ));
+		//m_Rect.AddComponent<SpriteRendererComponent>(glm::vec4( 0.f,1.f, 0.f, 1.f ));
 
 		class CameraController : public ScriptableEntity
 		{
@@ -116,10 +116,18 @@ namespace Envii
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					NewScene();
+
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					OpenScene();
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+					SaveSceneAs();
+				
 				if (ImGui::MenuItem("Exit"))
-				{
 					App::Get().Close();
-				}
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
@@ -173,7 +181,74 @@ namespace Envii
 	void EditorLayer::OnEvent(Event& event)
 	{
 		m_ActiveScene->OnEvent(event);
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressEvent>(EV_BIND_EVENT_CB(EditorLayer::OnKeyPress));
 	}
 
+	bool EditorLayer::OnKeyPress(KeyPressEvent& event)
+	{
+		// Keyboard shortcuts
+		if (event.GetRepeatCount() > 0)
+			return false;
 
+		bool shiftPressed = Input::IsKeyPressed(EV_KEY_LEFT_SHIFT) || Input::IsKeyPressed(EV_KEY_RIGHT_SHIFT);
+		bool controlPressed = Input::IsKeyPressed(EV_KEY_LEFT_CONTROL) || Input::IsKeyPressed(EV_KEY_RIGHT_CONTROL);
+		
+		switch (event.GetKeyCode())
+		{
+			case EV_KEY_S:
+			{
+				if (shiftPressed && controlPressed)
+					SaveSceneAs();
+				break;
+			}
+			case EV_KEY_O:
+			{
+				if (controlPressed)
+					OpenScene();
+				break;
+			}
+			case EV_KEY_N:
+			{
+				if (controlPressed)
+					NewScene();
+				break;
+			}
+		}
+
+		return true;
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ScenePanel.SetScene(m_ActiveScene);
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Envii Scene (*.envii)\0*.envii\0");
+
+		if (!filepath.empty())
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			m_ScenePanel.SetScene(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.DeserializeText(filepath);
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Envii Scene (*.envii)\0*.envii\0");
+
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.SerializeText(filepath);
+		}
+	}
 }

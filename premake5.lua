@@ -15,11 +15,13 @@ extIncludeDirs["glm"] = "%{wks.name}/thirdparty/glm"
 extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
 extIncludeDirs["stb_image"] = "%{wks.name}/thirdparty/stb_image"
 extIncludeDirs["entt"] = "%{wks.name}/thirdparty/entt/include"
+extIncludeDirs["yaml_cpp"] = "%{wks.name}/thirdparty/yaml-cpp/include"
 
 group "Dependencies"
 	include "Envii/thirdparty/glfw"
 	include "Envii/thirdparty/glad"
 	include "Envii/thirdparty/imgui"
+    include "Envii/thirdparty/yaml-cpp"
     
 group ""
 
@@ -27,6 +29,7 @@ group ""
 include "Envii/thirdparty/glfw"
 include "Envii/thirdparty/glad"
 include "Envii/thirdparty/imgui"
+include "Envii/thirdparty/yaml-cpp"
 
 project "Envii"
    location "Envii"
@@ -61,7 +64,8 @@ project "Envii"
         "%{extIncludeDirs.imgui}/backends",
         "%{extIncludeDirs.glm}",
         "%{extIncludeDirs.stb_image}",
-        "%{extIncludeDirs.entt}"
+        "%{extIncludeDirs.entt}",
+        "%{extIncludeDirs.yaml_cpp}"
    }
 
    links 
@@ -69,6 +73,7 @@ project "Envii"
         "Envii/thirdparty/glfw/" .. bindir .. "glfw.lib",
         "Envii/thirdparty/glad/" .. bindir .. "glad.lib",
         "Envii/thirdparty/imgui/" .. bindir .. "imgui.lib",
+        "Envii/thirdparty/yaml-cpp/" .. bindir .. "yaml.lib",
         "opengl32.lib"
    }
 
@@ -152,7 +157,8 @@ project "SceneEditor"
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
      "%{wks.location}/Envii/thirdparty/glm", 
      "%{wks.location}/Envii/thirdparty/imgui",
-     "%{wks.location}/Envii/thirdparty/entt/include"
+     "%{wks.location}/Envii/thirdparty/entt/include",
+     "%{wks.location}/Envii/thirdparty/yaml-cpp/include"
    }
    
    links "Envii" 

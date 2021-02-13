@@ -27,5 +27,6 @@ namespace Envii
 
 		friend class Entity;
 		friend class SceneGraphPanel;
+		friend class SceneSerializer;
 	};
 }

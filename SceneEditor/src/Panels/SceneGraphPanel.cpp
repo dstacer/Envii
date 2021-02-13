@@ -12,8 +12,9 @@ namespace Envii
 		: m_Scene(scene) {}
 
 	void SceneGraphPanel::SetScene(const Ref<Scene>& scene)
-	{
+	{ 
 		m_Scene = scene;
+		m_Selected = {};
 	}
 
 	void SceneGraphPanel::OnImguiRender()
@@ -249,7 +250,14 @@ namespace Envii
 		});
 
 		// Show the camera component UI
-		DrawComponent<CameraComponent>("Camera", entity, true, [](auto& component)
+		std::stringstream ss;
+		ss << "Camera  -  Aspect = ";
+		if (entity.HasComponent<CameraComponent>())
+		{
+			ss << entity.GetComponent<CameraComponent>().Cam.GeAspectRatio();
+		}
+
+		DrawComponent<CameraComponent>(ss.str(), entity, true, [](auto& component)
 		{
 			const char* projTypes[] = { "Orthographic", "Perspective" };
 			auto& camera = component.Cam;

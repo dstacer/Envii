@@ -123,6 +123,9 @@
     <ClInclude Include="src\Render\Buffer.h">
       <Filter>src\Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Render\Camera.h">
+      <Filter>src\Render</Filter>
+    </ClInclude>
     <ClInclude Include="src\Render\CameraController.h">
       <Filter>src\Render</Filter>
     </ClInclude>
@@ -147,6 +150,9 @@
     <ClInclude Include="src\Render\Renderer2D.h">
       <Filter>src\Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Render\SceneCamera.h">
+      <Filter>src\Render</Filter>
+    </ClInclude>
     <ClInclude Include="src\Render\Shader.h">
       <Filter>src\Render</Filter>
     </ClInclude>
@@ -159,7 +165,16 @@
     <ClInclude Include="src\Render\VertexArray.h">
       <Filter>src\Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Component.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Entity.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ScriptableEntity.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\evpch.h">
@@ -168,11 +183,8 @@
     <ClInclude Include="thirdparty\stb_image\stb_image.h">
       <Filter>thirdparty\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Component.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\Render\Camera.h" />
-    <ClInclude Include="src\Render\SceneCamera.h" />
-    <ClInclude Include="src\Scene\ScriptableEntity.h" />
+    <ClInclude Include="src\Scene\SceneSerializer.h" />
+    <ClInclude Include="src\Utils\PlatformUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\App.cpp">
@@ -247,6 +259,9 @@
     <ClCompile Include="src\Render\Renderer2D.cpp">
       <Filter>src\Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\Render\SceneCamera.cpp">
+      <Filter>src\Render</Filter>
+    </ClCompile>
     <ClCompile Include="src\Render\Shader.cpp">
       <Filter>src\Render</Filter>
     </ClCompile>
@@ -262,6 +277,9 @@
     <ClCompile Include="src\Render\VertexArray.cpp">
       <Filter>src\Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Entity.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -271,7 +289,7 @@
     <ClCompile Include="thirdparty\stb_image\stb_image.cpp">
       <Filter>thirdparty\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Entity.cpp" />
-    <ClCompile Include="src\Render\SceneCamera.cpp" />
+    <ClCompile Include="src\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
   </ItemGroup>
 </Project>

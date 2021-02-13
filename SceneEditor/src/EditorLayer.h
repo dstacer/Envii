@@ -33,6 +33,11 @@ namespace Envii
 		void OnEvent(Event& event) override;
 
 	private:
+		bool OnKeyPress(KeyPressEvent& event);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+	private:
 		Ref<Texture2D> m_Tex;
 		Ref<Texture2D> m_SquareTex;
 		Ref<Texture2D> m_SpriteSheet;
