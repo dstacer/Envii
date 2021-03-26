@@ -81,8 +81,8 @@ project "Envii"
         "opengl32.lib"
    }
 
-   --filter "files:thirdparty/ImGuizmo/**.cpp"
-    --  flags "NoPCH" 
+   filter "files:%{prj.name}/thirdparty/ImGuizmo/**.cpp"
+      flags "NoPCH" 
 
    filter "system:windows"
       systemversion "latest"
