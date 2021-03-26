@@ -14,6 +14,8 @@ namespace Envii
 
 		void SetScene(const Ref<Scene>& scene);
 		void OnImguiRender();
+
+		Entity GetSelectedEntity() const { return m_Selected; }
 		
 	private:
 		void DrawEntityNode(Entity entity);

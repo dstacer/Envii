@@ -16,6 +16,7 @@ extIncludeDirs["imgui"] = "%{wks.name}/thirdparty/imgui"
 extIncludeDirs["stb_image"] = "%{wks.name}/thirdparty/stb_image"
 extIncludeDirs["entt"] = "%{wks.name}/thirdparty/entt/include"
 extIncludeDirs["yaml_cpp"] = "%{wks.name}/thirdparty/yaml-cpp/include"
+extIncludeDirs["imguizmo"] = "%{wks.name}/thirdparty/ImGuizmo"
 
 group "Dependencies"
 	include "Envii/thirdparty/glfw"
@@ -51,7 +52,9 @@ project "Envii"
 
    files { "%{prj.name}/src/**.h", 
            "%{prj.name}/src/**.cpp",
-           "%{prj.name}/thirdparty/stb_image/**.*"
+           "%{prj.name}/thirdparty/stb_image/**.*",
+           "%{prj.name}/thirdparty/ImGuizmo/ImGuizmo.h",
+           "%{prj.name}/thirdparty/ImGuizmo/ImGuizmo.cpp"
          }
 
    includedirs 
@@ -65,7 +68,8 @@ project "Envii"
         "%{extIncludeDirs.glm}",
         "%{extIncludeDirs.stb_image}",
         "%{extIncludeDirs.entt}",
-        "%{extIncludeDirs.yaml_cpp}"
+        "%{extIncludeDirs.yaml_cpp}",
+        "%{extIncludeDirs.imguizmo}"
    }
 
    links 
@@ -77,14 +81,12 @@ project "Envii"
         "opengl32.lib"
    }
 
+   --filter "files:thirdparty/ImGuizmo/**.cpp"
+    --  flags "NoPCH" 
+
    filter "system:windows"
       systemversion "latest"
       defines "EV_PLATFORM_WINDOWS"
-
-      postbuildcommands 
-      {
-         --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "Sandbox")
-      }
    
    filter "configurations:Debug"
       defines { "EV_DEBUG", "_DEBUG" }
@@ -113,11 +115,12 @@ project "Sandbox"
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
    includedirs 
-   { "%{wks.location}/Envii/src/Client",
+   { 
+     "%{wks.location}/Envii/src/Client",
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
-     "%{wks.location}/Envii/thirdparty/glm", 
-     "%{wks.location}/Envii/thirdparty/imgui",
-     "%{wks.location}/Envii/thirdparty/entt/include"
+     "%{extIncludeDirs.glm}", 
+     "%{extIncludeDirs.imgui}",
+     "%{extIncludeDirs.entt}"
    }
    
    links "Envii" 
@@ -153,12 +156,15 @@ project "SceneEditor"
    files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
    includedirs 
-   { "%{wks.location}/Envii/src/Client",
+   { 
+     "src",
+     "%{wks.location}/Envii/src/Client",
      "%{wks.location}/Envii/thirdparty/spdlog/include", 
-     "%{wks.location}/Envii/thirdparty/glm", 
-     "%{wks.location}/Envii/thirdparty/imgui",
-     "%{wks.location}/Envii/thirdparty/entt/include",
-     "%{wks.location}/Envii/thirdparty/yaml-cpp/include"
+     "%{extIncludeDirs.glm}", 
+     "%{extIncludeDirs.imgui}",
+     "%{extIncludeDirs.entt}",
+     "%{extIncludeDirs.yaml_cpp}",
+     "%{extIncludeDirs.imguizmo}"
    }
    
    links "Envii" 

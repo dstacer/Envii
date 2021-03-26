@@ -1,6 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include "ImGuizmo.h"
 #include "EditorLayer.h"
 
 namespace Envii
@@ -155,6 +156,7 @@ namespace Envii
 		ImGui::Separator();
 		ImGui::End();
 		
+		// Render the scene in the Viewport window
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 		ImGui::Begin("Viewport");
 
@@ -174,6 +176,34 @@ namespace Envii
 		ImGui::Image((void*)fbTexId, 
 					 ImVec2((float)m_ViewportSize.x, (float)m_ViewportSize.y),
 					 ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+
+		// Render transfrom gizmo
+		Entity selected = m_ScenePanel.GetSelectedEntity();
+		if (selected)
+		{
+			Entity primaryCamera = m_ActiveScene->GetPrimaryCamera();
+			if (primaryCamera)
+			{
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+
+				glm::mat4 viewMatrix = glm::inverse(primaryCamera.GetComponent<TransformComponent>().GetTransform());
+				const glm::mat4& projMatrix = primaryCamera.GetComponent<CameraComponent>().Cam.GetProjection();
+				auto& tc = selected.GetComponent<TransformComponent>();
+				glm::mat4 transform = tc.GetTransform();
+
+				ImGuizmo::Manipulate(glm::value_ptr(viewMatrix), glm::value_ptr(projMatrix),
+					ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+
+				if (ImGuizmo::IsUsing())
+				{
+					tc.Translation = glm::vec3(transform[3]);
+				}
+			}
+		}
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
