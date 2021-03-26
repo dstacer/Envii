@@ -13,3 +13,6 @@
 [submodule "Envii/thirdparty/yaml-cpp"]
 	path = Envii/thirdparty/yaml-cpp
 	url = https://github.com/dstacer/yaml-cpp.git
+[submodule "Envii/thirdparty/ImGuizmo"]
+	path = Envii/thirdparty/ImGuizmo
+	url = https://github.com/dstacer/ImGuizmo.git
