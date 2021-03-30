@@ -52,6 +52,8 @@ namespace Envii
 		Entity m_Rect;
 		Entity m_Camera;
 
+		int m_CurrGizmoOp = -1;
+
 		// Panels
 		SceneGraphPanel m_ScenePanel;
 

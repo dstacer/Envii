@@ -164,7 +164,7 @@ namespace Envii
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 
-		App::Get().GetImguiLayer()->ConsumeEvents(!m_ViewportFocused || !m_ViewportHovered);
+		App::Get().GetImguiLayer()->ConsumeEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (viewportSize.x > 0.f && viewportSize.y > 0.f && (m_ViewportSize.x != viewportSize.x || m_ViewportSize.y != viewportSize.y))
@@ -176,10 +176,10 @@ namespace Envii
 		ImGui::Image((void*)fbTexId, 
 					 ImVec2((float)m_ViewportSize.x, (float)m_ViewportSize.y),
 					 ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
-
+		
 		// Render transfrom gizmo
 		Entity selected = m_ScenePanel.GetSelectedEntity();
-		if (selected)
+		if (selected && m_CurrGizmoOp != -1)
 		{
 			Entity primaryCamera = m_ActiveScene->GetPrimaryCamera();
 			if (primaryCamera)
@@ -188,18 +188,48 @@ namespace Envii
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 
-
+				// Get cam projection & view
 				glm::mat4 viewMatrix = glm::inverse(primaryCamera.GetComponent<TransformComponent>().GetTransform());
 				const glm::mat4& projMatrix = primaryCamera.GetComponent<CameraComponent>().Cam.GetProjection();
+				
+				// Get selected entity transform
 				auto& tc = selected.GetComponent<TransformComponent>();
 				glm::mat4 transform = tc.GetTransform();
+				glm::vec3 origRot = tc.Rotation;
 
+				// Set gizmo snap values
+				bool snap = Input::IsKeyPressed(EV_KEY_LEFT_CONTROL);
+				float snapValue = 0.5f; // Default for translation
+				switch (m_CurrGizmoOp)
+				{
+				case ImGuizmo::OPERATION::TRANSLATE:
+					// already set
+					break;
+				case ImGuizmo::OPERATION::ROTATE:
+					snapValue = 5.f;
+					break;
+				case ImGuizmo::OPERATION::SCALE:
+					snapValue = 0.1f;
+					break;
+				}
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				// Render current gizmo and handle user action
 				ImGuizmo::Manipulate(glm::value_ptr(viewMatrix), glm::value_ptr(projMatrix),
-					ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+					(ImGuizmo::OPERATION)m_CurrGizmoOp, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform),
+					nullptr, snap ? snapValues : nullptr);
 
 				if (ImGuizmo::IsUsing())
 				{
-					tc.Translation = glm::vec3(transform[3]);
+					// Get gizmo-altered matrix and decompose back into transform component
+					glm::vec3 translation(0.f), rotation(0.f), scale(1.f);
+					if (DecomposeTransform(transform, translation, rotation, scale))
+					{
+						tc.Translation = translation;
+						glm::vec3 deltaRot = rotation - origRot;
+						tc.Rotation += deltaRot;
+						tc.Scale = scale;
+					}
 				}
 			}
 		}
@@ -244,7 +274,21 @@ namespace Envii
 					NewScene();
 				break;
 			}
-		}
+
+			// Gizmo type switching
+			case EV_KEY_Q:
+				m_CurrGizmoOp = -1;
+				break;
+			case EV_KEY_W:
+				m_CurrGizmoOp = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case EV_KEY_E:
+				m_CurrGizmoOp = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case EV_KEY_R:
+				m_CurrGizmoOp = ImGuizmo::OPERATION::SCALE;
+				break;
+		}		
 
 		return true;
 	}

@@ -37,7 +37,6 @@
 #include "../Scene/SceneSerializer.h"
 
 
-
-
 // Utils
 #include "../Utils/PlatformUtils.h"
+#include "../Math/Math.h"
